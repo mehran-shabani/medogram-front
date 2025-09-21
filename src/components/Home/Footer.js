@@ -1,5 +1,6 @@
 // noinspection JSRemoveUnnecessaryParentheses
 import React, { useState } from 'react';
+import Image from 'next/image';
 import {
     Container,
     Box,
@@ -195,10 +196,11 @@ const Footer = () => {
     const features = [
         {
             icon: (
-                <img
+                <Image
                     src="https://cdn-icons-png.flaticon.com/512/5488/5488385.png"
                     alt="کادر مجرب"
-                    style={{ width: 40, height: 40 }}
+                    width={40}
+                    height={40}
                 />
             ),
             title: 'کادر مجرب',
@@ -206,10 +208,11 @@ const Footer = () => {
         },
         {
             icon: (
-                <img
+                <Image
                     src="https://cdn-icons-png.flaticon.com/512/4939/4939112.png"
                     alt="آموزش مداوم"
-                    style={{ width: 40, height: 40 }}
+                    width={40}
+                    height={40}
                 />
             ),
             title: 'آموزش مداوم',
@@ -217,10 +220,11 @@ const Footer = () => {
         },
         {
             icon: (
-                <img
+                <Image
                     src="https://cdn-icons-png.flaticon.com/512/31/31679.png"
                     alt="پشتیبانی"
-                    style={{ width: 40, height: 40 }}
+                    width={40}
+                    height={40}
                 />
             ),
             title: 'پشتیبانی ۲۴/۷',
@@ -461,10 +465,11 @@ const Footer = () => {
                                 target="_blank"
                                 rel="noopener noreferrer"
                             >
-                                <img
+                                <Image
                                     src="https://trustseal.enamad.ir/logo.aspx?id=520504&Code=jdx3UPD8Cqkiw4vGO7mwQBuVLfP5ZsCG"
                                     alt="نماد اعتماد"
-                                    style={{ height: 60 }}
+                                    width={60}
+                                    height={60}
                                 />
                             </MuiLink>
                         </Grid>
@@ -474,20 +479,16 @@ const Footer = () => {
                                 target="_blank"
                                 rel="noopener noreferrer"
                             >
-                                <img
+                                <Image
                                     src="https://bitpay.ir/theme/public/images/trusted-logo.svg"
                                     alt="درگاه پرداخت"
-                                    style={{ height: 60 }}
+                                    width={60}
+                                    height={60}
                                 />
                             </MuiLink>
                         </Grid>
                         <Grid item>
                             <Box
-                                component="img"
-                                referrerPolicy="origin"
-                                id="rgvjjzpejxlzsizpesgtrgvj"
-                                src="https://logo.samandehi.ir/logo.aspx?id=371903&p=qftiyndtnbpdbsiylymaqfti"
-                                alt="نماد ساماندهی"
                                 sx={{
                                     height: 60,
                                     cursor: 'pointer',
@@ -503,7 +504,18 @@ const Footer = () => {
                                         'toolbar=no, scrollbars=no, location=no, statusbar=no, menubar=no, resizable=0, width=450, height=630, top=30'
                                     )
                                 }
-                            />
+                            >
+                                <Image
+                                    id="rgvjjzpejxlzsizpesgtrgvj"
+                                    src="https://logo.samandehi.ir/logo.aspx?id=371903&p=qftiyndtnbpdbsiylymaqfti"
+                                    alt="نماد ساماندهی"
+                                    width={60}
+                                    height={60}
+                                    style={{ 
+                                        objectFit: 'contain'
+                                    }}
+                                />
+                            </Box>
                         </Grid>
                     </Grid>
                 </Box>
