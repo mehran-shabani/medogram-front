@@ -73,7 +73,7 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/t
 
 - **Automated Versioning**: Conventional Commits → semver, tags, CHANGELOG, GitHub Releases (workflow: *Release Please*).
 - **Release Assets**: On tag push (e.g., `v1.2.3`), CI builds and attaches `.zip` artifacts:
-  - If present: `.next/`, `dist/`, `build/`
+  - If present: `.next/standalone`, `.next/`, `out/`, `dist/`, `build/`
   - Always: `*-source.zip` (source snapshot)
 - **Quality Gates**: Every commit triggers comprehensive testing (CI, Lint, Security, E2E) before release
 - **Auto-Release**: Releases are automatically created after all quality gates pass
