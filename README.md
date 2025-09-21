@@ -79,3 +79,8 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/t
 Badges:
 [![Release Please](https://github.com/OWNER/REPO/actions/workflows/release-please.yml/badge.svg)](https://github.com/OWNER/REPO/actions/workflows/release-please.yml)
 [![Package • Attach Assets](https://github.com/OWNER/REPO/actions/workflows/package-on-tag.yml/badge.svg)](https://github.com/OWNER/REPO/actions/workflows/package-on-tag.yml)
+[![CI](https://github.com/OWNER/REPO/actions/workflows/ci.yml/badge.svg)](https://github.com/OWNER/REPO/actions/workflows/ci.yml)
+[![Lint & Code Quality](https://github.com/OWNER/REPO/actions/workflows/lint.yml/badge.svg)](https://github.com/OWNER/REPO/actions/workflows/lint.yml)
+[![Security Scan](https://github.com/OWNER/REPO/actions/workflows/security.yml/badge.svg)](https://github.com/OWNER/REPO/actions/workflows/security.yml)
+[![E2E Tests](https://github.com/OWNER/REPO/actions/workflows/e2e.yml/badge.svg)](https://github.com/OWNER/REPO/actions/workflows/e2e.yml)
+[![CodeQL](https://github.com/OWNER/REPO/actions/workflows/codeql.yml/badge.svg)](https://github.com/OWNER/REPO/actions/workflows/codeql.yml)

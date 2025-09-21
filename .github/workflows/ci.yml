@@ -129,6 +129,8 @@ jobs:
             ${{ steps.pm.outputs.run }} build
           elif [ -f package.json ]; then
             ${{ steps.pm.outputs.run }} build --if-present
+          else
+            echo "No build script found, skipping build step"
           fi
 
       - name: Upload build artifact
