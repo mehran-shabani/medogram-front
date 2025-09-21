@@ -44,8 +44,14 @@ jobs:
           mkdir -p .release
           NAME="${{ github.event.repository.name }}"
           TAG="${{ github.ref_name }}"
+          if [ -d ".next/standalone" ]; then
+            (cd .next && zip -r "../.release/${NAME}-${TAG}-next-standalone.zip" standalone)
+          fi
           if [ -d ".next" ]; then
             zip -r ".release/${NAME}-${TAG}-next.zip" .next
+          fi
+          if [ -d "out" ]; then
+            zip -r ".release/${NAME}-${TAG}-out.zip" out
           fi
           if [ -d "dist" ]; then
             zip -r ".release/${NAME}-${TAG}-dist.zip" dist
@@ -55,7 +61,6 @@ jobs:
           fi
           # Always include source snapshot for that commit
           git archive --format zip --output ".release/${NAME}-${TAG}-source.zip" ${{ github.sha }}
-
       - name: Upload artifacts (for debugging)
         uses: actions/upload-artifact@v4
         with:
