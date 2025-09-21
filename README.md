@@ -1,95 +1,191 @@
-# Getting Started with Create React App
+# 🏥 Medogram
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+<div align="center">
 
-## Available Scripts
+![Medogram Logo](public/logo.png)
 
-In the project directory, you can run:
+**A comprehensive medical platform built with Next.js and React**
 
-### `npm start`
+[![Next.js](https://img.shields.io/badge/Next.js-14.2.7-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
+[![React](https://img.shields.io/badge/React-18.3.1-blue?style=for-the-badge&logo=react)](https://reactjs.org/)
+[![Material-UI](https://img.shields.io/badge/Material--UI-7.3.2-blue?style=for-the-badge&logo=mui)](https://mui.com/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+</div>
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## 📋 Table of Contents
 
-### `npm test`
+- [About](#-about)
+- [Features](#-features)
+- [Tech Stack](#-tech-stack)
+- [Getting Started](#-getting-started)
+- [Project Structure](#-project-structure)
+- [Available Scripts](#-available-scripts)
+- [Deployment](#-deployment)
+- [Contributing](#-contributing)
+- [License](#-license)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## 🎯 About
 
-### `npm run build`
+Medogram is a modern, comprehensive medical platform designed to provide healthcare services and medical assistance. The application offers various features including diabetes prediction, medical consultations, user management, and more.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## ✨ Features
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- 🔐 **User Authentication** - Secure login and profile management
+- 🩺 **Medical Predictions** - AI-powered diabetes prediction
+- 💬 **Chat System** - Interactive medical chatbot
+- 📝 **Blog System** - Medical articles and information
+- 📅 **Visit Management** - Appointment scheduling and tracking
+- 💳 **Payment Integration** - Secure payment processing
+- 📱 **Responsive Design** - Mobile-first approach
+- 🌐 **Multi-language Support** - Persian/Farsi interface
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## 🛠 Tech Stack
 
-### `npm run eject`
+### Frontend
+- **Framework**: Next.js 14.2.7
+- **UI Library**: Material-UI (MUI) 7.3.2
+- **Styling**: Styled Components, Emotion
+- **Icons**: Lucide React, Font Awesome
+- **Animations**: Framer Motion
+- **Forms**: React Hook Form with Yup validation
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### Backend & Services
+- **API**: Axios for HTTP requests
+- **OCR**: Tesseract.js for text recognition
+- **Notifications**: React Toastify
+- **Routing**: React Router DOM
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Development Tools
+- **Linting**: ESLint with Next.js config
+- **Testing**: Jest, React Testing Library
+- **Build**: Next.js build system
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## 🚀 Getting Started
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### Prerequisites
 
-## Learn More
+- Node.js (v18 or higher)
+- npm or yarn package manager
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### Installation
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/your-username/medogram.git
+   cd medogram
+   ```
 
-### Code Splitting
+2. **Install dependencies**
+   ```bash
+   npm install
+   # or
+   yarn install
+   ```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+3. **Set up environment variables**
+   ```bash
+   cp .env.example .env.local
+   # Edit .env.local with your configuration
+   ```
 
-### Analyzing the Bundle Size
+4. **Run the development server**
+   ```bash
+   npm run dev
+   # or
+   yarn dev
+   ```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+5. **Open your browser**
+   Navigate to [http://localhost:3000](http://localhost:3000)
 
-### Making a Progressive Web App
+## 📁 Project Structure
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+```
+medogram/
+├── app/                    # Next.js App Router pages
+│   ├── about/             # About page
+│   ├── blogs/             # Blog section
+│   ├── contact/           # Contact page
+│   ├── diabetes-prediction/ # Medical prediction feature
+│   ├── login/             # Authentication
+│   ├── profile/           # User profile
+│   └── visits/            # Visit management
+├── src/                   # Source code
+│   ├── components/        # React components
+│   │   ├── Auth/          # Authentication components
+│   │   ├── chat/          # Chat system
+│   │   ├── Home/          # Homepage components
+│   │   ├── Navbar/        # Navigation
+│   │   └── predictions/   # Medical predictions
+│   ├── styles/            # Styling files
+│   └── utils/             # Utility functions
+├── public/                # Static assets
+└── package.json           # Dependencies and scripts
+```
 
-### Advanced Configuration
+## 📜 Available Scripts
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Start development server |
+| `npm run build` | Build for production |
+| `npm run start` | Start production server |
+| `npm run lint` | Run ESLint |
 
-### Deployment
+## 🌐 Deployment
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+### Vercel (Recommended)
 
-### `npm run build` fails to minify
+1. Push your code to GitHub
+2. Connect your repository to Vercel
+3. Deploy automatically on every push
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+### Manual Deployment
 
-## 🔁 Releases & Downloadable Packages
+```bash
+# Build the application
+npm run build
 
-- **Automated Versioning**: Conventional Commits → semver, tags, CHANGELOG, GitHub Releases (workflow: *Release Please*).
-- **Release Assets**: On tag push (e.g., `v1.2.3`), CI builds and attaches `.zip` artifacts:
-  - If present: `.next/standalone`, `.next/`, `out/`, `dist/`, `build/`
-  - Always: `*-source.zip` (source snapshot)
-- **Quality Gates**: Every commit triggers comprehensive testing (CI, Lint, Security, E2E) before release
-- **Auto-Release**: Releases are automatically created after all quality gates pass
+# Start production server
+npm run start
+```
 
-### 🚀 Release Process
-1. **Commit** → Quality gates run automatically
-2. **All gates pass** → Release pipeline triggered
-3. **Release created** → Assets built and attached
-4. **Notification** → Team notified of successful release
+## 🤝 Contributing
 
-Badges:
-[![Release Pipeline](https://github.com/OWNER/REPO/actions/workflows/release-pipeline.yml/badge.svg)](https://github.com/OWNER/REPO/actions/workflows/release-pipeline.yml)
-[![Auto-Release](https://github.com/OWNER/REPO/actions/workflows/auto-release.yml/badge.svg)](https://github.com/OWNER/REPO/actions/workflows/auto-release.yml)
-[![Package • Attach Assets](https://github.com/OWNER/REPO/actions/workflows/package-on-tag.yml/badge.svg)](https://github.com/OWNER/REPO/actions/workflows/package-on-tag.yml)
-[![CI](https://github.com/OWNER/REPO/actions/workflows/ci.yml/badge.svg)](https://github.com/OWNER/REPO/actions/workflows/ci.yml)
-[![Lint & Code Quality](https://github.com/OWNER/REPO/actions/workflows/lint.yml/badge.svg)](https://github.com/OWNER/REPO/actions/workflows/lint.yml)
-[![Security Scan](https://github.com/OWNER/REPO/actions/workflows/security.yml/badge.svg)](https://github.com/OWNER/REPO/actions/workflows/security.yml)
-[![E2E Tests](https://github.com/OWNER/REPO/actions/workflows/e2e.yml/badge.svg)](https://github.com/OWNER/REPO/actions/workflows/e2e.yml)
-[![CodeQL](https://github.com/OWNER/REPO/actions/workflows/codeql.yml/badge.svg)](https://github.com/OWNER/REPO/actions/workflows/codeql.yml)
+We welcome contributions! Please follow these steps:
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+### Development Guidelines
+
+- Follow the existing code style
+- Write meaningful commit messages
+- Add tests for new features
+- Update documentation as needed
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 📞 Support
+
+If you have any questions or need help, please:
+
+- Open an issue on GitHub
+- Contact us through the contact page
+- Check the documentation
+
+---
+
+<div align="center">
+
+**Made with ❤️ for better healthcare**
+
+[Website](https://medogram.com) • [Documentation](https://docs.medogram.com) • [Support](mailto:support@medogram.com)
+
+</div>
