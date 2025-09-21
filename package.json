@@ -1,6 +1,6 @@
 {
   "name": "react_medogram",
-  "version": "1.1",
+  "version": "1.2",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.14.0",
