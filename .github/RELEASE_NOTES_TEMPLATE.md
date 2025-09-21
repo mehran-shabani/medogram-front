@@ -1,7 +1,7 @@
-# Release ${{TAG_NAME}}
+# Release __TAG_NAME__
 
 ## Highlights
 - …
 
 ## Changes
-${{ CHANGELOG }}
+__CHANGELOG__
