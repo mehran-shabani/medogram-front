@@ -1,0 +1,97 @@
+{
+  "quality_gates": {
+    "code_quality": {
+      "eslint": {
+        "enabled": true,
+        "max_warnings": 0,
+        "required": true
+      },
+      "prettier": {
+        "enabled": true,
+        "required": true
+      },
+      "typescript": {
+        "enabled": true,
+        "required": false
+      }
+    },
+    "security": {
+      "dependency_audit": {
+        "enabled": true,
+        "audit_level": "moderate",
+        "required": true
+      },
+      "codeql": {
+        "enabled": true,
+        "required": true
+      },
+      "secret_scanning": {
+        "enabled": true,
+        "required": true
+      }
+    },
+    "testing": {
+      "unit_tests": {
+        "enabled": true,
+        "required": true,
+        "coverage_threshold": 80
+      },
+      "integration_tests": {
+        "enabled": true,
+        "required": false
+      },
+      "e2e_tests": {
+        "enabled": true,
+        "required": false
+      }
+    },
+    "build": {
+      "build_verification": {
+        "enabled": true,
+        "required": true
+      },
+      "bundle_size_check": {
+        "enabled": true,
+        "max_size_mb": 5,
+        "required": false
+      }
+    },
+    "release": {
+      "auto_release": {
+        "enabled": true,
+        "trigger_on": "all_gates_pass",
+        "require_approval": false
+      },
+      "release_notes": {
+        "auto_generate": true,
+        "require_manual_review": false
+      }
+    }
+  },
+  "workflows": {
+    "required_for_release": [
+      "CI",
+      "Lint & Code Quality", 
+      "Security Scan"
+    ],
+    "optional_for_release": [
+      "E2E Tests",
+      "CodeQL"
+    ]
+  },
+  "notifications": {
+    "slack": {
+      "enabled": false,
+      "webhook_url": ""
+    },
+    "email": {
+      "enabled": false,
+      "recipients": []
+    },
+    "github": {
+      "enabled": true,
+      "comment_on_pr": true,
+      "create_issue_on_failure": true
+    }
+  }
+}

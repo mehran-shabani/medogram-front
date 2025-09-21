@@ -1,8 +1,20 @@
 blank_issues_enabled: false
 contact_links:
   - name: 📚 Documentation
-    url: https://example.com/docs
-    about: Read the docs before filing an issue.
+    url: https://github.com/OWNER/REPO#readme
+    about: Read the project documentation before filing an issue.
   - name: 💬 Discussions
     url: https://github.com/OWNER/REPO/discussions
-    about: Ask questions and share ideas.
+    about: Ask questions and share ideas in our community discussions.
+  - name: 🐛 Bug Reports
+    url: https://github.com/OWNER/REPO/issues/new?template=bug_report.yml
+    about: Report a bug or issue you've encountered.
+  - name: ✨ Feature Requests
+    url: https://github.com/OWNER/REPO/issues/new?template=feature_request.yml
+    about: Suggest a new feature or enhancement.
+  - name: 🔧 Configuration Issues
+    url: https://github.com/OWNER/REPO/issues/new?template=configuration.yml
+    about: Report configuration, setup, or deployment issues.
+  - name: 📚 Documentation Issues
+    url: https://github.com/OWNER/REPO/issues/new?template=documentation.yml
+    about: Report documentation problems or request documentation improvements.

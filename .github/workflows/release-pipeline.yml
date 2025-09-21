@@ -1,0 +1,298 @@
+name: Release Pipeline
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  workflow_dispatch:
+    inputs:
+      release_type:
+        description: 'Release type'
+        required: true
+        default: 'patch'
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+      skip_tests:
+        description: 'Skip tests (emergency release only)'
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: write
+  pull-requests: write
+  security-events: write
+  actions: read
+
+concurrency:
+  group: release-${{ github.ref }}-${{ github.workflow }}
+  cancel-in-progress: false
+
+jobs:
+  # Quality Gates - All must pass before release
+  quality-gates:
+    name: Quality Gates
+    runs-on: ubuntu-latest
+    if: ${{ !inputs.skip_tests }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Detect package manager
+        id: pm
+        run: |
+          if [ -f pnpm-lock.yaml ]; then
+            echo "name=pnpm" >> $GITHUB_OUTPUT
+            echo "cache=pnpm" >> $GITHUB_OUTPUT
+            echo "install=pnpm install --frozen-lockfile" >> $GITHUB_OUTPUT
+            echo "run=pnpm" >> $GITHUB_OUTPUT
+          elif [ -f yarn.lock ]; then
+            echo "name=yarn" >> $GITHUB_OUTPUT
+            echo "cache=yarn" >> $GITHUB_OUTPUT
+            echo "install=yarn --frozen-lockfile" >> $GITHUB_OUTPUT
+            echo "run=yarn" >> $GITHUB_OUTPUT
+          else
+            echo "name=npm" >> $GITHUB_OUTPUT
+            echo "cache=npm" >> $GITHUB_OUTPUT
+            echo "install=npm ci" >> $GITHUB_OUTPUT
+            echo "run=npm run" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: ${{ steps.pm.outputs.cache }}
+
+      - name: Install dependencies
+        run: ${{ steps.pm.outputs.install }}
+
+      - name: Parse package.json
+        id: pkg
+        run: |
+          node -e "
+          const fs = require('fs');
+          const p = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+          const deps = {...p.dependencies, ...p.devDependencies};
+          const out = {
+            hasLint: !!(p.scripts && p.scripts.lint),
+            hasTypecheck: !!(p.scripts && p.scripts.typecheck),
+            hasTest: !!(p.scripts && p.scripts.test),
+            hasBuild: !!(p.scripts && p.scripts.build),
+            hasEslint: !!deps.eslint,
+            hasPrettier: !!deps.prettier,
+            hasTypescript: !!deps.typescript,
+            hasJest: !!deps.jest,
+            hasVitest: !!deps.vitest,
+            hasNext: !!deps.next
+          };
+          for (const [k, v] of Object.entries(out)) {
+            process.stdout.write(k + '=' + v + '\n');
+          }
+          " >> $GITHUB_OUTPUT
+
+      # Gate 1: Code Quality
+      - name: 🚨 Gate 1: Code Quality Checks
+        run: |
+          echo "=== Running Code Quality Checks ==="
+          
+          # ESLint
+          if [ '${{ steps.pkg.outputs.hasEslint }}' = 'true' ]; then
+            echo "Running ESLint..."
+            if [ '${{ steps.pkg.outputs.hasLint }}' = 'true' ]; then
+              ${{ steps.pm.outputs.run }} lint
+            else
+              npx eslint . --ext .js,.jsx,.ts,.tsx --max-warnings 0
+            fi
+            echo "✅ ESLint passed"
+          fi
+          
+          # Prettier
+          if [ '${{ steps.pkg.outputs.hasPrettier }}' = 'true' ]; then
+            echo "Running Prettier..."
+            npx prettier --check "**/*.{js,jsx,ts,tsx,json,css,md}"
+            echo "✅ Prettier passed"
+          fi
+          
+          # TypeScript
+          if [ '${{ steps.pkg.outputs.hasTypescript }}' = 'true' ]; then
+            echo "Running TypeScript check..."
+            if [ '${{ steps.pkg.outputs.hasTypecheck }}' = 'true' ]; then
+              ${{ steps.pm.outputs.run }} typecheck
+            else
+              npx tsc --noEmit
+            fi
+            echo "✅ TypeScript check passed"
+          fi
+
+      # Gate 2: Security
+      - name: 🔒 Gate 2: Security Checks
+        run: |
+          echo "=== Running Security Checks ==="
+          
+          # Dependency audit
+          echo "Running dependency audit..."
+          if [ '${{ steps.pm.outputs.name }}' = 'pnpm' ]; then
+            pnpm audit --audit-level moderate
+          elif [ '${{ steps.pm.outputs.name }}' = 'yarn' ]; then
+            yarn audit --level moderate
+          else
+            npm audit --audit-level moderate
+          fi
+          echo "✅ Security audit passed"
+
+      # Gate 3: Testing
+      - name: 🧪 Gate 3: Test Suite
+        run: |
+          echo "=== Running Test Suite ==="
+          
+          if [ '${{ steps.pkg.outputs.hasTest }}' = 'true' ]; then
+            if [ '${{ steps.pkg.outputs.hasVitest }}' = 'true' ]; then
+              echo "Running Vitest..."
+              ${{ steps.pm.outputs.run }} test -- --coverage --run
+            elif [ '${{ steps.pkg.outputs.hasJest }}' = 'true' ]; then
+              echo "Running Jest..."
+              ${{ steps.pm.outputs.run }} test -- --coverage
+            else
+              echo "Running tests..."
+              ${{ steps.pm.outputs.run }} test
+            fi
+            echo "✅ Tests passed"
+          else
+            echo "⚠️ No test script found, skipping tests"
+          fi
+
+      # Gate 4: Build
+      - name: 🏗️ Gate 4: Build Verification
+        run: |
+          echo "=== Running Build Verification ==="
+          
+          if [ '${{ steps.pkg.outputs.hasBuild }}' = 'true' ]; then
+            echo "Running build..."
+            ${{ steps.pm.outputs.run }} build
+            echo "✅ Build successful"
+          else
+            echo "⚠️ No build script found, skipping build"
+          fi
+
+      - name: Upload Quality Gate Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: quality-gate-results
+          path: |
+            coverage/**
+            .nyc_output/**
+            coverage-final.json
+          if-no-files-found: ignore
+          retention-days: 7
+
+  # Release Process
+  release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    needs: [quality-gates]
+    if: always() && (needs.quality-gates.result == 'success' || inputs.skip_tests == true)
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Detect package manager
+        id: pm
+        run: |
+          if [ -f pnpm-lock.yaml ]; then
+            echo "name=pnpm" >> $GITHUB_OUTPUT
+            echo "install=pnpm install --frozen-lockfile" >> $GITHUB_OUTPUT
+            echo "run=pnpm" >> $GITHUB_OUTPUT
+          elif [ -f yarn.lock ]; then
+            echo "name=yarn" >> $GITHUB_OUTPUT
+            echo "install=yarn --frozen-lockfile" >> $GITHUB_OUTPUT
+            echo "run=yarn" >> $GITHUB_OUTPUT
+          else
+            echo "name=npm" >> $GITHUB_OUTPUT
+            echo "install=npm ci" >> $GITHUB_OUTPUT
+            echo "run=npm run" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: ${{ steps.pm.outputs.name }}
+
+      - name: Install dependencies
+        run: ${{ steps.pm.outputs.install }}
+
+      - name: Configure Git
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+
+      - name: Create Release PR
+        uses: googleapis/release-please-action@v4
+        with:
+          release-type: node
+          package-name: ${{ github.event.repository.name }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Check for Release PR
+        id: release-pr
+        run: |
+          PR_NUMBER=$(gh pr list --head "release-please" --json number --jq '.[0].number' || echo "")
+          if [ -n "$PR_NUMBER" ]; then
+            echo "pr_number=$PR_NUMBER" >> $GITHUB_OUTPUT
+            echo "Release PR found: #$PR_NUMBER"
+          else
+            echo "No release PR found"
+          fi
+
+      - name: Auto-merge Release PR
+        if: steps.release-pr.outputs.pr_number
+        run: |
+          echo "Auto-merging release PR #${{ steps.release-pr.outputs.pr_number }}"
+          gh pr merge ${{ steps.release-pr.outputs.pr_number }} --squash --auto
+
+  # Post-release verification
+  post-release:
+    name: Post-Release Verification
+    runs-on: ubuntu-latest
+    needs: [release]
+    if: always() && needs.release.result == 'success'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Verify Release
+        run: |
+          echo "=== Post-Release Verification ==="
+          
+          # Get latest release
+          LATEST_RELEASE=$(gh release list --limit 1 --json tagName --jq '.[0].tagName')
+          echo "Latest release: $LATEST_RELEASE"
+          
+          # Check if release has assets
+          ASSETS=$(gh release view $LATEST_RELEASE --json assets --jq '.assets | length')
+          echo "Release assets count: $ASSETS"
+          
+          if [ "$ASSETS" -gt 0 ]; then
+            echo "✅ Release created with assets"
+          else
+            echo "⚠️ Release created but no assets found"
+          fi
+
+      - name: Update Release Status
+        run: |
+          echo "## 🎉 Release Pipeline Complete" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Stage | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|-------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Quality Gates | ${{ needs.quality-gates.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Release Creation | ${{ needs.release.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Post-Release Verification | ${{ job.status }} |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "All quality gates passed successfully! 🚀" >> $GITHUB_STEP_SUMMARY

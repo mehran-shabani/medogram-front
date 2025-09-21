@@ -1,48 +1,175 @@
-name: "🐞 Bug report"
-description: "Report a reproducible issue."
-labels: ["bug"]
+name: "🐞 Bug Report"
+description: "Report a reproducible bug or issue"
+title: "[BUG] "
+labels: ["bug", "needs-triage"]
 assignees: []
 body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 🐛 Bug Report
+        Please provide detailed information about the bug you encountered.
+        
+        **Before submitting:**
+        - [ ] I have searched existing issues to avoid duplicates
+        - [ ] I have checked the documentation
+        - [ ] I have tried the latest version
+
   - type: textarea
     id: summary
     attributes:
-      label: Summary
-      description: What went wrong?
-      placeholder: Clear and concise description.
+      label: 📝 Bug Summary
+      description: Provide a clear and concise description of the bug
+      placeholder: "A brief description of what the bug is..."
     validations:
       required: true
+
   - type: textarea
-    id: repro
+    id: reproduction
     attributes:
-      label: Reproduction steps
-      description: Provide steps and minimal repro if possible.
+      label: 🔄 Steps to Reproduce
+      description: Provide detailed steps to reproduce the issue
       placeholder: |
         1. Go to '...'
         2. Click on '...'
-        3. See error '...'
+        3. Scroll down to '...'
+        4. See error
+      value: |
+        1. 
+        2. 
+        3. 
+        4. 
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: ✅ Expected Behavior
+      description: What should happen instead?
+      placeholder: "Describe what you expected to happen..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual-behavior
+    attributes:
+      label: ❌ Actual Behavior
+      description: What actually happened?
+      placeholder: "Describe what actually happened..."
+    validations:
+      required: true
+
   - type: input
     id: version
     attributes:
-      label: Version
-      description: App/Node/Package manager versions
-      placeholder: e.g. app 1.2.3, Node 20.11, pnpm 9
-  - type: dropdown
-    id: env
-    attributes:
-      label: Environment
-      options: ["Local", "CI", "Production", "Other"]
+      label: 📦 Version Information
+      description: App, Node.js, and package manager versions
+      placeholder: "e.g. App v1.2.3, Node.js 20.11.0, npm 10.2.0"
     validations:
       required: true
+
+  - type: dropdown
+    id: environment
+    attributes:
+      label: 🌍 Environment
+      description: Where did this bug occur?
+      options: 
+        - "Local Development"
+        - "Staging Environment"
+        - "Production Environment"
+        - "CI/CD Pipeline"
+        - "Docker Container"
+        - "Other"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: browser
+    attributes:
+      label: 🌐 Browser (if applicable)
+      description: Which browser did you use?
+      options:
+        - "Chrome"
+        - "Firefox"
+        - "Safari"
+        - "Edge"
+        - "Other"
+        - "Not applicable"
+    validations:
+      required: false
+
+  - type: dropdown
+    id: device
+    attributes:
+      label: 📱 Device Type
+      description: What device are you using?
+      options:
+        - "Desktop"
+        - "Mobile"
+        - "Tablet"
+        - "Other"
+    validations:
+      required: false
+
   - type: textarea
     id: logs
     attributes:
-      label: Logs & screenshots
-      description: Paste relevant logs (surround with backticks) and/or screenshots.
+      label: 📋 Logs & Screenshots
+      description: |
+        Paste relevant logs (surround with backticks) and/or attach screenshots.
+        For logs, include:
+        - Console errors
+        - Network errors
+        - Build errors
+        - Any relevant stack traces
+      placeholder: |
+        ```
+        Paste logs here...
+        ```
+      render: shell
+
   - type: textarea
-    id: expected
+    id: workaround
     attributes:
-      label: Expected behavior
+      label: 🔧 Workaround
+      description: Have you found any temporary workaround?
+      placeholder: "Describe any workaround you've found..."
+
   - type: textarea
-    id: additional
+    id: impact
     attributes:
-      label: Additional context
+      label: 💥 Impact Assessment
+      description: |
+        How does this bug affect users/workflow?
+        - Severity: Critical/High/Medium/Low
+        - Affected users: All/Some/Specific
+        - Workflow impact: Blocks/Impedes/Minor
+      placeholder: |
+        Severity: [Critical/High/Medium/Low]
+        Affected users: [All/Some/Specific]
+        Workflow impact: [Blocks/Impedes/Minor]
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: 📚 Additional Context
+      description: Any other context, related issues, or information that might be helpful
+      placeholder: "Add any other context about the problem here..."
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: ✅ Pre-submission Checklist
+      description: Please confirm the following
+      options:
+        - label: I have searched existing issues to avoid duplicates
+          required: true
+        - label: I have provided all required information
+          required: true
+        - label: I have tested this on the latest version
+          required: true
+        - label: I have included relevant logs/screenshots
+          required: false
+        - label: I understand this will be publicly visible
+          required: true

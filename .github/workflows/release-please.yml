@@ -1,9 +1,13 @@
-name: Release Please
+name: Release Please (Legacy)
 
 on:
-  push:
-    branches: [ "main", "master" ]
   workflow_dispatch:
+    inputs:
+      force_release:
+        description: 'Force release (bypass quality gates)'
+        required: false
+        default: false
+        type: boolean
 
 permissions:
   contents: write
@@ -12,8 +16,9 @@ permissions:
 jobs:
   release:
     runs-on: ubuntu-latest
+    if: inputs.force_release == true
     steps:
-      - name: Release Please
+      - name: Release Please (Emergency)
         uses: googleapis/release-please-action@v4
         with:
           release-type: node
