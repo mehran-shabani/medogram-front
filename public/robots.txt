@@ -1,9 +1,29 @@
 User-agent: *
-Disallow:
+Allow: /
 
-# Disallow: /admin/
-# Disallow: /login/
-# Disallow: /register/
+# Allow important pages for SEO
+Allow: /drug-pricing
+Allow: /prescription-renewal
+Allow: /visits
+Allow: /chat
+Allow: /diabetes-prediction
+Allow: /about
+Allow: /contact
+Allow: /blogs
 
+# Disallow admin and private areas
+Disallow: /admin/
+Disallow: /api/
+Disallow: /_next/
+Disallow: /profile/
+Disallow: /user-visits/
+
+# Crawl delay for better server performance
+Crawl-delay: 1
+
+# Sitemap location
 Sitemap: https://www.medogram.ir/sitemap.xml
+
+# Additional sitemaps for better indexing
+Sitemap: https://www.medogram.ir/sitemap-0.xml
 

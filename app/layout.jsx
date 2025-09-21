@@ -3,16 +3,34 @@ import ClientLayout from './ClientLayout';
 import Script from 'next/script';
 
 export const metadata = {
-  title: 'مدوگرام | ویزیت با دکتر هوشمند AI و خدمات پزشکی آنلاین',
+  title: 'مدوگرام | تمدید نسخه آنلاین، قیمت دارو با بیمه، استعلام قیمت دارو | کاهش هزینه دارو',
   description:
-    'مدوگرام | خدمات پزشکی آنلاین، ویزیت با دکتر هوشمند AI و مراقبت‌های بالینی آنلاین و تلفنی، شامل ویزیت آنلاین و مشاوره پزشکی.',
+    'مدوگرام | تمدید نسخه آنلاین، استعلام قیمت دارو با بیمه، کاهش هزینه دارو. کمترین قیمت داروها را هر روزه پیدا می‌کنیم و نسخه‌ها را بر اساس آن می‌نویسیم. ویزیت با دکتر هوشمند AI.',
+  keywords: 'تمدید نسخه آنلاین، قیمت دارو با بیمه، استعلام قیمت دارو، کاهش هزینه دارو، کمترین قیمت دارو، نسخه آنلاین، داروخانه آنلاین، بیمه درمانی',
   openGraph: {
     type: 'website',
     url: 'https://www.medogram.ir',
-    title: 'مدوگرام | ویزیت با دکتر هوشمند AI و خدمات پزشکی آنلاین',
+    title: 'مدوگرام | تمدید نسخه آنلاین، قیمت دارو با بیمه، استعلام قیمت دارو',
     description:
-      'مدوگرام ارائه دهنده خدمات پزشکی و مشاوره آنلاین با دکتر هوشمند AI و مراقبت‌های بالینی تلفنی.',
+      'تمدید نسخه آنلاین، استعلام قیمت دارو با بیمه، کاهش هزینه دارو. کمترین قیمت داروها را هر روزه پیدا می‌کنیم و نسخه‌ها را بر اساس آن می‌نویسیم.',
     images: [{ url: 'https://www.medogram.ir/logo.png' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'مدوگرام | تمدید نسخه آنلاین، قیمت دارو با بیمه',
+    description: 'تمدید نسخه آنلاین، استعلام قیمت دارو با بیمه، کاهش هزینه دارو',
+    images: ['https://www.medogram.ir/logo.png'],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
   },
 };
 
@@ -29,6 +47,70 @@ export default function RootLayout({ children }) {
         <Script id="raychat" strategy="afterInteractive" dangerouslySetInnerHTML={{
           __html: `window.RAYCHAT_TOKEN = "7118d195-bc06-48c0-b1cd-5d832fef9b44";(function(){var d=document;var s=d.createElement("script");s.src="https://widget-react.raychat.io/install/widget.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();`
         }} />
+
+        {/* Structured Data for SEO */}
+        <Script
+          id="structured-data"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "MedicalOrganization",
+              "name": "مدوگرام",
+              "description": "تمدید نسخه آنلاین، استعلام قیمت دارو با بیمه، کاهش هزینه دارو",
+              "url": "https://www.medogram.ir",
+              "logo": "https://www.medogram.ir/logo.png",
+              "sameAs": [
+                "https://www.medogram.ir"
+              ],
+              "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "IR"
+              },
+              "contactPoint": {
+                "@type": "ContactPoint",
+                "contactType": "customer service",
+                "availableLanguage": "Persian"
+              },
+              "medicalSpecialty": [
+                "General Practice",
+                "Online Consultation",
+                "Prescription Renewal",
+                "Drug Price Inquiry"
+              ],
+              "hasOfferCatalog": {
+                "@type": "OfferCatalog",
+                "name": "خدمات پزشکی آنلاین",
+                "itemListElement": [
+                  {
+                    "@type": "Offer",
+                    "itemOffered": {
+                      "@type": "Service",
+                      "name": "تمدید نسخه آنلاین",
+                      "description": "تمدید سریع و راحت نسخه آنلاین با کمترین قیمت دارو"
+                    }
+                  },
+                  {
+                    "@type": "Offer",
+                    "itemOffered": {
+                      "@type": "Service",
+                      "name": "استعلام قیمت دارو با بیمه",
+                      "description": "استعلام قیمت دارو با بیمه و کاهش هزینه دارو"
+                    }
+                  },
+                  {
+                    "@type": "Offer",
+                    "itemOffered": {
+                      "@type": "Service",
+                      "name": "مشاوره آنلاین",
+                      "description": "دریافت مشاوره پزشکی تخصصی با پزشکان مجرب"
+                    }
+                  }
+                ]
+              }
+            })
+          }}
+        />
 
         <ClientLayout>{children}</ClientLayout>
       </body>
