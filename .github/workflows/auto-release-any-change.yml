@@ -13,6 +13,7 @@ jobs:
   release:
     name: Create Release
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -48,30 +49,25 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
 
-      - name: Get current version
+      - name: Get and bump version
         id: version
         run: |
-          # Get current package.json version
           CURRENT_VERSION=$(node -p "require('./package.json').version")
           echo "current_version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
 
-          # Parse version components
           IFS='.' read -r MAJOR MINOR PATCH <<< "$CURRENT_VERSION"
 
-          # Check if this is the first release (version 0.1.0 or similar)
-          if [ "$MAJOR" = "0" ] && [ "$MINOR" = "1" ] && [ "$PATCH" = "0" ]; then
-            # Start from 1.1
-            NEW_VERSION="1.1"
-            echo "First release detected. Starting from version 1.1"
+          # Ensure version is at least 1.2.0
+          if [ "$MAJOR" -lt 1 ] || { [ "$MAJOR" -eq 1 ] && [ "$MINOR" -lt 2 ]; }; then
+            MAJOR=1
+            MINOR=2
+            PATCH=0
           else
-            # Calculate new version by adding 0.1 to current version
-            # Convert to number, add 0.1, format back to version
-            CURRENT_NUM=$(echo "$CURRENT_VERSION" | awk '{printf "%.1f", $1}')
-            NEW_NUM=$(echo "$CURRENT_NUM + 0.1" | bc)
-            NEW_VERSION=$(printf "%.1f" $NEW_NUM)
-            echo "Current version: $CURRENT_VERSION, New version: $NEW_VERSION"
+            MINOR=$((MINOR + 1))
+            PATCH=0
           fi
 
+          NEW_VERSION="${MAJOR}.${MINOR}.${PATCH}"
           echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
 
       - name: Update package.json version
@@ -79,7 +75,6 @@ jobs:
           NEW_VERSION="${{ steps.version.outputs.new_version }}"
           echo "Updating version to $NEW_VERSION"
 
-          # Update version in package.json
           node -e "
           const fs = require('fs');
           const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
@@ -87,7 +82,6 @@ jobs:
           fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2) + '\n');
           "
 
-          # Commit the version change
           git add package.json
           git commit -m "chore: bump version to $NEW_VERSION" || echo "No changes to commit"
 
@@ -103,44 +97,31 @@ jobs:
           fi
           echo "✅ Build successful"
 
-      - name: Create Release
-        id: create-release
+      - name: Push changes and tag
         run: |
           NEW_VERSION="${{ steps.version.outputs.new_version }}"
-          COMMIT_SHA="${{ github.sha }}"
+          git push origin HEAD:${{ github.ref_name }}
+          git tag "v$NEW_VERSION"
+          git push origin "v$NEW_VERSION"
 
-          echo "Creating release v$NEW_VERSION for commit $COMMIT_SHA"
-
-          # Get commit messages since last release
+      - name: Create GitHub Release
+        run: |
+          NEW_VERSION="${{ steps.version.outputs.new_version }}"
           LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
           if [ -n "$LAST_TAG" ]; then
-            COMMITS=$(git log $LAST_TAG..HEAD --oneline --no-merges)
+            CHANGES=$(git log "$LAST_TAG"..HEAD --oneline --no-merges)
           else
-            COMMITS=$(git log --oneline --no-merges -10)
+            CHANGES=$(git log --oneline --no-merges -10)
           fi
 
-          # Create release notes
-          RELEASE_NOTES="## 🚀 Release v$NEW_VERSION
-
-          ### Changes:
-          $COMMITS
-
-          ### Version Update:
-          - Version bumped from ${{ steps.version.outputs.current_version }} to $NEW_VERSION
-          - Auto-generated release for all changes
-          "
-
-          # Create the release
           gh release create "v$NEW_VERSION" \
             --title "Release v$NEW_VERSION" \
-            --notes "$RELEASE_NOTES" \
-            --generate-notes \
-            || echo "Release creation failed, but continuing..."
+            --notes "## 🚀 Changes in v$NEW_VERSION
 
-      - name: Push version changes
-        run: |
-          echo "Pushing version changes to repository"
-          git push origin HEAD:${{ github.ref_name }} || echo "No changes to push"
+          $CHANGES
+
+          Version bumped from ${{ steps.version.outputs.current_version }} to $NEW_VERSION
+          " || echo "⚠️ Release creation failed"
 
       - name: Create Release Summary
         run: |
@@ -148,9 +129,7 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "| Version | Status |" >> $GITHUB_STEP_SUMMARY
           echo "|---------|--------|" >> $GITHUB_STEP_SUMMARY
-          echo "| ${{ steps.version.outputs.new_version }} | ✅ Created |" >> $GITHUB_STEP_SUMMARY
+          echo "| ${{ steps.version.outputs.new_version }} | ✅ Released |" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**Previous version:** ${{ steps.version.outputs.current_version }}" >> $GITHUB_STEP_SUMMARY
           echo "**Commit:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "Auto-release triggered for any repository changes! 🚀" >> $GITHUB_STEP_SUMMARY
