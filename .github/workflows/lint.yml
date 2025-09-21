@@ -1,0 +1,171 @@
+name: Lint & Code Quality
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+concurrency:
+  group: lint-${{ github.ref }}-${{ github.workflow }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    name: Lint & Code Quality
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Detect package manager
+        id: pm
+        run: |
+          if [ -f pnpm-lock.yaml ]; then
+            echo "name=pnpm" >> $GITHUB_OUTPUT
+            echo "cache=pnpm" >> $GITHUB_OUTPUT
+            echo "install=pnpm install --frozen-lockfile" >> $GITHUB_OUTPUT
+            echo "run=pnpm" >> $GITHUB_OUTPUT
+          elif [ -f yarn.lock ]; then
+            echo "name=yarn" >> $GITHUB_OUTPUT
+            echo "cache=yarn" >> $GITHUB_OUTPUT
+            echo "install=yarn --frozen-lockfile" >> $GITHUB_OUTPUT
+            echo "run=yarn" >> $GITHUB_OUTPUT
+          else
+            echo "name=npm" >> $GITHUB_OUTPUT
+            echo "cache=npm" >> $GITHUB_OUTPUT
+            echo "install=npm ci" >> $GITHUB_OUTPUT
+            echo "run=npm run" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: ${{ steps.pm.outputs.cache }}
+
+      - name: Install dependencies
+        run: ${{ steps.pm.outputs.install }}
+
+      - name: Parse package.json for available scripts
+        id: scripts
+        run: |
+          node -e "
+          const fs = require('fs');
+          const p = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+          const deps = {...p.dependencies, ...p.devDependencies};
+          const out = {
+            hasLint: !!(p.scripts && p.scripts.lint),
+            hasLintFix: !!(p.scripts && p.scripts['lint:fix']),
+            hasFormat: !!(p.scripts && p.scripts.format),
+            hasFormatCheck: !!(p.scripts && p.scripts['format:check']),
+            hasTypecheck: !!(p.scripts && p.scripts.typecheck),
+            hasEslint: !!deps.eslint,
+            hasPrettier: !!deps.prettier,
+            hasTypescript: !!deps.typescript,
+            hasNext: !!deps.next
+          };
+          for (const [k, v] of Object.entries(out)) {
+            process.stdout.write(k + '=' + v + '\n');
+          }
+          " >> $GITHUB_OUTPUT
+
+      - name: ESLint Check
+        if: ${{ steps.scripts.outputs.hasEslint == 'true' }}
+        run: |
+          if [ '${{ steps.scripts.outputs.hasLint }}' = 'true' ]; then
+            ${{ steps.pm.outputs.run }} lint
+          else
+            echo "Running ESLint directly..."
+            npx eslint . --ext .js,.jsx,.ts,.tsx --max-warnings 0
+          fi
+
+      - name: Prettier Check
+        if: ${{ steps.scripts.outputs.hasPrettier == 'true' }}
+        run: |
+          if [ '${{ steps.scripts.outputs.hasFormatCheck }}' = 'true' ]; then
+            ${{ steps.pm.outputs.run }} format:check
+          elif [ '${{ steps.scripts.outputs.hasFormat }}' = 'true' ]; then
+            ${{ steps.pm.outputs.run }} format --check
+          else
+            echo "Running Prettier check directly..."
+            npx prettier --check "**/*.{js,jsx,ts,tsx,json,css,md}"
+          fi
+
+      - name: TypeScript Check
+        if: ${{ steps.scripts.outputs.hasTypescript == 'true' }}
+        run: |
+          if [ '${{ steps.scripts.outputs.hasTypecheck }}' = 'true' ]; then
+            ${{ steps.pm.outputs.run }} typecheck
+          else
+            echo "Running TypeScript check directly..."
+            npx tsc --noEmit
+          fi
+
+      - name: Next.js Build Check
+        if: ${{ steps.scripts.outputs.hasNext == 'true' }}
+        run: |
+          echo "Running Next.js build check..."
+          ${{ steps.pm.outputs.run }} build
+
+      - name: Upload lint results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lint-results
+          path: |
+            eslint-report.json
+            prettier-report.json
+          if-no-files-found: ignore
+          retention-days: 7
+
+  security-lint:
+    name: Security Linting
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Detect package manager
+        id: pm
+        run: |
+          if [ -f pnpm-lock.yaml ]; then
+            echo "name=pnpm" >> $GITHUB_OUTPUT
+            echo "install=pnpm install --frozen-lockfile" >> $GITHUB_OUTPUT
+          elif [ -f yarn.lock ]; then
+            echo "name=yarn" >> $GITHUB_OUTPUT
+            echo "install=yarn --frozen-lockfile" >> $GITHUB_OUTPUT
+          else
+            echo "name=npm" >> $GITHUB_OUTPUT
+            echo "install=npm ci" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: ${{ steps.pm.outputs.name }}
+
+      - name: Install dependencies
+        run: ${{ steps.pm.outputs.install }}
+
+      - name: Run security audit
+        run: |
+          echo "Running security audit..."
+          if [ '${{ steps.pm.outputs.name }}' = 'pnpm' ]; then
+            pnpm audit --audit-level moderate
+          elif [ '${{ steps.pm.outputs.name }}' = 'yarn' ]; then
+            yarn audit --level moderate
+          else
+            npm audit --audit-level moderate
+          fi
+
+      - name: Check for known vulnerabilities
+        run: |
+          echo "Checking for known vulnerabilities..."
+          npx audit-ci --config audit-ci.json || true

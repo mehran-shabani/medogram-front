@@ -1,0 +1,77 @@
+name: Package • Attach Assets
+
+'on':
+  push:
+    tags:
+      - "v*.*.*"
+  workflow_dispatch:
+permissions:
+  contents: write
+
+jobs:
+  build-and-attach:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Detect package manager
+        id: pm
+        run: |
+          if [ -f pnpm-lock.yaml ]; then
+            echo "name=pnpm" >> $GITHUB_OUTPUT; echo "i=pnpm install --frozen-lockfile" >> $GITHUB_OUTPUT; echo "r=pnpm" >> $GITHUB_OUTPUT
+          elif [ -f yarn.lock ]; then
+            echo "name=yarn" >> $GITHUB_OUTPUT; echo "i=yarn --frozen-lockfile" >> $GITHUB_OUTPUT; echo "r=yarn" >> $GITHUB_OUTPUT
+          else
+            echo "name=npm" >> $GITHUB_OUTPUT; echo "i=npm ci" >> $GITHUB_OUTPUT; echo "r=npm run" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: ${{ steps.pm.outputs.name }}
+
+      - name: Install deps
+        run: ${{ steps.pm.outputs.i }}
+
+      - name: Build
+        run: ${{ steps.pm.outputs.r }} build
+
+      - name: Package build output
+        run: |
+          mkdir -p .release
+          NAME="${{ github.event.repository.name }}"
+          TAG="${{ github.ref_name }}"
+          if [ -d ".next/standalone" ]; then
+            (cd .next && zip -r "../.release/${NAME}-${TAG}-next-standalone.zip" standalone)
+          fi
+          if [ -d ".next" ]; then
+            zip -r ".release/${NAME}-${TAG}-next.zip" .next
+          fi
+          if [ -d "out" ]; then
+            zip -r ".release/${NAME}-${TAG}-out.zip" out
+          fi
+          if [ -d "dist" ]; then
+            zip -r ".release/${NAME}-${TAG}-dist.zip" dist
+          fi
+          if [ -d "build" ]; then
+            zip -r ".release/${NAME}-${TAG}-build.zip" build
+          fi
+          # Always include source snapshot for that commit
+          git archive --format zip --output ".release/${NAME}-${TAG}-source.zip" ${{ github.sha }}
+      - name: Upload artifacts (for debugging)
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-assets-${{ github.ref_name }}
+          path: .release/*
+          retention-days: 7
+
+      - name: Create/Update GitHub Release & upload assets
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: |
+            .release/*.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

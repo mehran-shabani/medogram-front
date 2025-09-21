@@ -1,0 +1,65 @@
+name: "📚 Documentation Issue"
+description: "Report issues with documentation, missing docs, or unclear instructions"
+title: "[DOCS] "
+labels: ["documentation", "needs-triage"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 📚 Documentation Issue
+        Report issues with documentation, missing documentation, or unclear instructions.
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: 📝 Issue Summary
+      description: Brief description of the documentation problem
+      placeholder: "Describe the documentation issue..."
+    validations:
+      required: true
+
+  - type: dropdown
+    id: doc-type
+    attributes:
+      label: 📄 Documentation Type
+      description: What type of documentation issue is this?
+      options:
+        - "Missing Documentation"
+        - "Outdated Documentation"
+        - "Unclear Instructions"
+        - "Incorrect Information"
+        - "Poor Organization"
+        - "Missing Examples"
+        - "Translation Issue"
+        - "Other"
+    validations:
+      required: true
+
+  - type: textarea
+    id: affected-docs
+    attributes:
+      label: 📖 Affected Documentation
+      description: Which documentation files or sections are affected?
+      placeholder: "List specific files, URLs, or sections..."
+
+  - type: textarea
+    id: current-content
+    attributes:
+      label: 📝 Current Content
+      description: What does the current documentation say?
+      placeholder: "Paste the current documentation content..."
+
+  - type: textarea
+    id: suggested-content
+    attributes:
+      label: ✏️ Suggested Content
+      description: What should the documentation say instead?
+      placeholder: "Describe or paste the improved documentation..."
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: 📚 Additional Context
+      description: Any other relevant information
+      placeholder: "Add any other context here..."

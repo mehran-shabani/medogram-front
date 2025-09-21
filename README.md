@@ -68,3 +68,28 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+## 🔁 Releases & Downloadable Packages
+
+- **Automated Versioning**: Conventional Commits → semver, tags, CHANGELOG, GitHub Releases (workflow: *Release Please*).
+- **Release Assets**: On tag push (e.g., `v1.2.3`), CI builds and attaches `.zip` artifacts:
+  - If present: `.next/standalone`, `.next/`, `out/`, `dist/`, `build/`
+  - Always: `*-source.zip` (source snapshot)
+- **Quality Gates**: Every commit triggers comprehensive testing (CI, Lint, Security, E2E) before release
+- **Auto-Release**: Releases are automatically created after all quality gates pass
+
+### 🚀 Release Process
+1. **Commit** → Quality gates run automatically
+2. **All gates pass** → Release pipeline triggered
+3. **Release created** → Assets built and attached
+4. **Notification** → Team notified of successful release
+
+Badges:
+[![Release Pipeline](https://github.com/OWNER/REPO/actions/workflows/release-pipeline.yml/badge.svg)](https://github.com/OWNER/REPO/actions/workflows/release-pipeline.yml)
+[![Auto-Release](https://github.com/OWNER/REPO/actions/workflows/auto-release.yml/badge.svg)](https://github.com/OWNER/REPO/actions/workflows/auto-release.yml)
+[![Package • Attach Assets](https://github.com/OWNER/REPO/actions/workflows/package-on-tag.yml/badge.svg)](https://github.com/OWNER/REPO/actions/workflows/package-on-tag.yml)
+[![CI](https://github.com/OWNER/REPO/actions/workflows/ci.yml/badge.svg)](https://github.com/OWNER/REPO/actions/workflows/ci.yml)
+[![Lint & Code Quality](https://github.com/OWNER/REPO/actions/workflows/lint.yml/badge.svg)](https://github.com/OWNER/REPO/actions/workflows/lint.yml)
+[![Security Scan](https://github.com/OWNER/REPO/actions/workflows/security.yml/badge.svg)](https://github.com/OWNER/REPO/actions/workflows/security.yml)
+[![E2E Tests](https://github.com/OWNER/REPO/actions/workflows/e2e.yml/badge.svg)](https://github.com/OWNER/REPO/actions/workflows/e2e.yml)
+[![CodeQL](https://github.com/OWNER/REPO/actions/workflows/codeql.yml/badge.svg)](https://github.com/OWNER/REPO/actions/workflows/codeql.yml)

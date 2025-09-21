@@ -1,0 +1,107 @@
+name: Auto-Release on Quality Gates Pass
+
+on:
+  workflow_run:
+    workflows: ["CI", "Lint & Code Quality", "Security Scan", "E2E"]
+    types: [completed]
+    branches: [main, master]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  check-quality-gates:
+    name: Check Quality Gates Status
+    runs-on: ubuntu-latest
+    if: github.event.workflow_run.conclusion == 'success'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check All Required Workflows
+        id: check-workflows
+        run: |
+          echo "Checking workflow status..."
+          
+          # Get the commit SHA that triggered the workflows
+          COMMIT_SHA="${{ github.event.workflow_run.head_sha }}"
+          echo "Commit SHA: $COMMIT_SHA"
+          
+          # Check if all required workflows passed for this commit
+          REQUIRED_WORKFLOWS=("CI" "Lint & Code Quality" "Security Scan")
+          
+          ALL_PASSED=true
+          for workflow in "${REQUIRED_WORKFLOWS[@]}"; do
+            echo "Checking $workflow..."
+            
+            # Get workflow runs for this commit
+            RUNS=$(gh api repos/${{ github.repository }}/actions/runs \
+              --jq ".workflow_runs[] | select(.head_sha == \"$COMMIT_SHA\" and .name == \"$workflow\") | .conclusion" \
+              | head -1)
+            
+            if [ "$RUNS" = "success" ]; then
+              echo "✅ $workflow: PASSED"
+            else
+              echo "❌ $workflow: FAILED or NOT FOUND"
+              ALL_PASSED=false
+            fi
+          done
+          
+          echo "all_passed=$ALL_PASSED" >> $GITHUB_OUTPUT
+          
+          if [ "$ALL_PASSED" = "true" ]; then
+            echo "🎉 All quality gates passed! Ready for release."
+          else
+            echo "⚠️ Some quality gates failed. Release blocked."
+          fi
+
+  trigger-release:
+    name: Trigger Release Pipeline
+    runs-on: ubuntu-latest
+    needs: [check-quality-gates]
+    if: needs.check-quality-gates.outputs.all_passed == 'true'
+    steps:
+      - name: Trigger Release Pipeline
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: workflow } = await github.rest.actions.getWorkflow({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'release-pipeline.yml'
+            });
+            
+            await github.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: workflow.id,
+              ref: context.payload.workflow_run.head_branch
+            });
+            
+            console.log('Release pipeline triggered successfully!');
+
+  notify-release-status:
+    name: Notify Release Status
+    runs-on: ubuntu-latest
+    needs: [check-quality-gates, trigger-release]
+    if: always()
+    steps:
+      - name: Create Status Summary
+        run: |
+          echo "## 🚀 Auto-Release Status" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Commit:** ${{ github.event.workflow_run.head_sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Branch:** ${{ github.event.workflow_run.head_branch }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Check | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|-------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Quality Gates | ${{ needs.check-quality-gates.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Release Trigger | ${{ needs.trigger-release.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [ "${{ needs.check-quality-gates.result }}" = "success" ]; then
+            echo "✅ All quality gates passed! Release pipeline triggered." >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ Quality gates failed. Release blocked." >> $GITHUB_STEP_SUMMARY
+          fi

@@ -1,28 +1,140 @@
-name: "✨ Feature request"
-description: "Suggest an idea or enhancement."
-labels: ["enhancement"]
+name: "✨ Feature Request"
+description: "Suggest a new feature or enhancement"
+title: "[FEATURE] "
+labels: ["enhancement", "needs-triage"]
+assignees: []
 body:
+  - type: markdown
+    attributes:
+      value: |
+        ## ✨ Feature Request
+        Please provide detailed information about the feature you'd like to see implemented.
+        
+        **Before submitting:**
+        - [ ] I have searched existing issues to avoid duplicates
+        - [ ] I have checked the documentation
+        - [ ] I have considered the impact on existing functionality
+
   - type: textarea
     id: problem
     attributes:
-      label: Problem
-      description: What problem does this solve?
+      label: 🎯 Problem Statement
+      description: What problem does this feature solve? What pain point does it address?
+      placeholder: "Describe the problem or limitation you're facing..."
     validations:
       required: true
+
   - type: textarea
     id: solution
     attributes:
-      label: Proposed solution
-      description: Describe the desired solution or API.
+      label: 💡 Proposed Solution
+      description: Describe your proposed solution or feature in detail
+      placeholder: "Describe how you envision this feature working..."
+    validations:
+      required: true
+
   - type: textarea
     id: alternatives
     attributes:
-      label: Alternatives considered
+      label: 🔄 Alternatives Considered
+      description: What other solutions or workarounds have you considered?
+      placeholder: "Describe any alternative approaches you've thought about..."
+
+  - type: textarea
+    id: use-cases
+    attributes:
+      label: 📋 Use Cases
+      description: Provide specific use cases and scenarios where this feature would be valuable
+      placeholder: |
+        Use Case 1: [Description]
+        Use Case 2: [Description]
+        Use Case 3: [Description]
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: 🚨 Priority Level
+      description: How important is this feature to you?
+      options:
+        - "Critical - Blocks important workflow"
+        - "High - Significantly improves experience"
+        - "Medium - Nice to have improvement"
+        - "Low - Minor enhancement"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: complexity
+    attributes:
+      label: ⚙️ Estimated Complexity
+      description: How complex do you think this feature would be to implement?
+      options:
+        - "Simple - Minor changes"
+        - "Medium - Moderate development effort"
+        - "Complex - Significant development effort"
+        - "Very Complex - Major architectural changes"
+        - "Unknown - Need assessment"
+    validations:
+      required: false
+
+  - type: textarea
+    id: acceptance-criteria
+    attributes:
+      label: ✅ Acceptance Criteria
+      description: Define what "done" looks like for this feature
+      placeholder: |
+        - [ ] Criterion 1
+        - [ ] Criterion 2
+        - [ ] Criterion 3
+
   - type: textarea
     id: risks
     attributes:
-      label: Risks & trade-offs
+      label: ⚠️ Risks & Trade-offs
+      description: What potential risks or trade-offs should be considered?
+      placeholder: "Consider performance impact, breaking changes, maintenance burden, etc..."
+
   - type: textarea
-    id: additional
+    id: mockups
     attributes:
-      label: Additional context
+      label: 🎨 Mockups/Designs
+      description: If applicable, attach mockups, wireframes, or design references
+      placeholder: "Describe or attach any visual references..."
+
+  - type: textarea
+    id: api-changes
+    attributes:
+      label: 🔌 API Changes
+      description: Will this feature require changes to APIs, data structures, or interfaces?
+      placeholder: "Describe any API changes or new interfaces needed..."
+
+  - type: textarea
+    id: migration
+    attributes:
+      label: 🔄 Migration Considerations
+      description: How should existing users/data be migrated or handled?
+      placeholder: "Describe migration strategy or backward compatibility needs..."
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: 📚 Additional Context
+      description: Any other context, references, or information that might be helpful
+      placeholder: "Add any other context about the feature request here..."
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: ✅ Pre-submission Checklist
+      description: Please confirm the following
+      options:
+        - label: I have searched existing issues to avoid duplicates
+          required: true
+        - label: I have provided a clear problem statement
+          required: true
+        - label: I have described a specific solution
+          required: true
+        - label: I have considered alternatives
+          required: false
+        - label: I understand this will be publicly visible
+          required: true

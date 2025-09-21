@@ -1,0 +1,79 @@
+name: "🔧 Configuration Issue"
+description: "Report issues related to configuration, setup, or deployment"
+title: "[CONFIG] "
+labels: ["configuration", "needs-triage"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 🔧 Configuration Issue
+        Report issues related to configuration, setup, deployment, or environment problems.
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: 📝 Issue Summary
+      description: Brief description of the configuration problem
+      placeholder: "Describe the configuration issue..."
+    validations:
+      required: true
+
+  - type: dropdown
+    id: config-type
+    attributes:
+      label: 🔧 Configuration Type
+      description: What type of configuration issue is this?
+      options:
+        - "Environment Setup"
+        - "Build Configuration"
+        - "Deployment Configuration"
+        - "CI/CD Configuration"
+        - "Database Configuration"
+        - "API Configuration"
+        - "Security Configuration"
+        - "Other"
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: 📋 Steps Taken
+      description: What steps have you tried to resolve this?
+      placeholder: |
+        1. Step 1
+        2. Step 2
+        3. Step 3
+
+  - type: textarea
+    id: error-message
+    attributes:
+      label: ❌ Error Message
+      description: Paste the exact error message you're seeing
+      placeholder: "Paste error message here..."
+      render: shell
+
+  - type: textarea
+    id: config-files
+    attributes:
+      label: 📄 Configuration Files
+      description: Share relevant configuration files (remove sensitive data)
+      placeholder: |
+        ```json
+        // Paste configuration here
+        ```
+
+  - type: input
+    id: environment-details
+    attributes:
+      label: 🌍 Environment Details
+      description: OS, Node version, package manager, etc.
+      placeholder: "e.g. Ubuntu 22.04, Node 20.11.0, npm 10.2.0"
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: 📚 Additional Context
+      description: Any other relevant information
+      placeholder: "Add any other context here..."

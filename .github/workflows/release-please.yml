@@ -1,0 +1,26 @@
+name: Release Please (Legacy)
+
+on:
+  workflow_dispatch:
+    inputs:
+      force_release:
+        description: 'Force release (bypass quality gates)'
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    if: inputs.force_release == true
+    steps:
+      - name: Release Please (Emergency)
+        uses: googleapis/release-please-action@v4
+        with:
+          release-type: node
+          package-name: ${{ github.event.repository.name }}
+          # For monorepos, switch to manifest mode with a config file.

@@ -67,7 +67,9 @@ jobs:
 
       - name: Start app
         run: |
-          PORT=3000 ${{ steps.pm.outputs.run }} start --if-present &>/dev/null & echo $! > .pid || true
+          PORT=3000 ${{ steps.pm.outputs.run }} start --if-present &
+          echo $! > .pid
+          sleep 10  # Wait for app to start
 
       - name: Run Playwright
         if: ${{ steps.deps.outputs.hasPlaywright == 'true' }}
@@ -92,4 +94,9 @@ jobs:
       - name: Stop app
         if: always()
         run: |
-          if [ -f .pid ]; then kill $(cat .pid) || true; fi
+          if [ -f .pid ]; then 
+            kill $(cat .pid) 2>/dev/null || true
+            rm -f .pid
+          fi
+          # Kill any remaining node processes on port 3000
+          pkill -f "node.*3000" 2>/dev/null || true
