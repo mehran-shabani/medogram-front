@@ -160,9 +160,9 @@ const serviceCards = [
     },
     {
         id: 4,
-        title: 'تمدید نسخ دارویی',
+        title: 'تمدید نسخه آنلاین',
         icon: <Medication sx={{ fontSize: 40 }} />,
-        description: 'تمدید سریع و راحت نسخ دارویی شما',
+        description: 'تمدید سریع و راحت نسخه آنلاین با کمترین قیمت دارو',
         link: '/visits',
         color: '#ff9800',
     },
@@ -176,11 +176,19 @@ const serviceCards = [
     },
     {
         id: 6,
+        title: 'استعلام قیمت دارو با بیمه',
+        icon: <ImageSearch sx={{ fontSize: 40 }} />,
+        description: 'استعلام قیمت دارو با بیمه و کاهش هزینه دارو',
+        link: '/visits',
+        color: '#9c27b0',
+    },
+    {
+        id: 7,
         title: 'تفسیر و بررسی جواب آزمایشات',
         icon: <ImageSearch sx={{ fontSize: 40 }} />,
         description: 'بررسی دقیق نتایج آزمایشات و تصاویر پزشکی شما',
         link: '/visits',
-        color: '#9c27b0',
+        color: '#607d8b',
     },
 ];
 const insuranceCompanies = [
@@ -433,7 +441,7 @@ const Home = () => {
                                         lineHeight: 1.6,
                                     }}
                                 >
-                                    دسترسی آسان و سریع به بهترین خدمات پزشکی با کمک هوش مصنوعی و تیم متخصص
+                                    تمدید نسخه آنلاین، استعلام قیمت دارو با بیمه و کاهش هزینه دارو. کمترین قیمت داروها را هر روزه پیدا می‌کنیم و نسخه‌ها را بر اساس آن می‌نویسیم
                                 </Typography>
                                 <Box sx={{ 
                                     display: 'flex', 

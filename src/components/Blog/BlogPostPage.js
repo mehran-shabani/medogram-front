@@ -173,7 +173,27 @@ const BlogListPage = () => {
 
     return (
         <PageContainer>
-            <PageTitle>آخرین پست‌های وبلاگ</PageTitle>
+            <PageTitle>مقالات مدوگرام | استعلام قیمت دارو و تمدید نسخه آنلاین</PageTitle>
+            
+            <SEOSection>
+                <SEOTitle>مقالات تخصصی پزشکی آنلاین</SEOTitle>
+                <SEODescription>
+                    راهنمای کامل استعلام قیمت دارو با بیمه، تمدید نسخه آنلاین، کاهش هزینه دارو و راهکارهای صرفه‌جویی در هزینه‌های درمانی
+                </SEODescription>
+                <SEOKeywords>
+                    <KeywordChip>استعلام قیمت دارو با بیمه</KeywordChip>
+                    <KeywordChip>تمدید نسخه آنلاین</KeywordChip>
+                    <KeywordChip>کاهش هزینه دارو</KeywordChip>
+                    <KeywordChip>کمترین قیمت دارو</KeywordChip>
+                    <KeywordChip>بیمه درمانی</KeywordChip>
+                    <KeywordChip>داروخانه آنلاین</KeywordChip>
+                </SEOKeywords>
+                <CTAButtons>
+                    <CTAButton href="/drug-pricing">استعلام قیمت دارو</CTAButton>
+                    <CTAButton href="/prescription-renewal">تمدید نسخه آنلاین</CTAButton>
+                    <CTAButton href="/visits">شروع ویزیت</CTAButton>
+                </CTAButtons>
+            </SEOSection>
             {blogs.length > 0 ? (
                 <BlogList>
                     {blogs.map((blog) => (
@@ -345,6 +365,67 @@ const PageTitle = styled.h1`
     @media (max-width: 768px) {
         font-size: 2em;
         margin-bottom: 30px;
+    }
+`;
+
+const SEOSection = styled.div`
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 40px 20px;
+    margin-bottom: 40px;
+    border-radius: 15px;
+    text-align: center;
+`;
+
+const SEOTitle = styled.h2`
+    font-size: 2em;
+    margin-bottom: 20px;
+    color: white;
+`;
+
+const SEODescription = styled.p`
+    font-size: 1.2em;
+    line-height: 1.6;
+    margin-bottom: 30px;
+    opacity: 0.9;
+`;
+
+const SEOKeywords = styled.div`
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 30px;
+`;
+
+const KeywordChip = styled.span`
+    background: rgba(255, 255, 255, 0.2);
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.9em;
+    backdrop-filter: blur(10px);
+`;
+
+const CTAButtons = styled.div`
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+`;
+
+const CTAButton = styled.a`
+    background: #FFD700;
+    color: #333;
+    padding: 12px 24px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    
+    &:hover {
+        background: #FFC107;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
     }
 `;
 
