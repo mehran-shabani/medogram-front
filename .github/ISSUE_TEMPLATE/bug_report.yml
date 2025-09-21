@@ -1,0 +1,48 @@
+name: "🐞 Bug report"
+description: "Report a reproducible issue."
+labels: ["bug"]
+assignees: []
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: What went wrong?
+      placeholder: Clear and concise description.
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Reproduction steps
+      description: Provide steps and minimal repro if possible.
+      placeholder: |
+        1. Go to '...'
+        2. Click on '...'
+        3. See error '...'
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: App/Node/Package manager versions
+      placeholder: e.g. app 1.2.3, Node 20.11, pnpm 9
+  - type: dropdown
+    id: env
+    attributes:
+      label: Environment
+      options: ["Local", "CI", "Production", "Other"]
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs & screenshots
+      description: Paste relevant logs (surround with backticks) and/or screenshots.
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional context

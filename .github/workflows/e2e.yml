@@ -1,0 +1,95 @@
+name: E2E
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Detect package manager
+        id: pm
+        run: |
+          if [ -f pnpm-lock.yaml ]; then
+            echo "name=pnpm" >> $GITHUB_OUTPUT
+            echo "cache=pnpm" >> $GITHUB_OUTPUT
+            echo "install=pnpm install --frozen-lockfile" >> $GITHUB_OUTPUT
+            echo "run=pnpm" >> $GITHUB_OUTPUT
+          elif [ -f yarn.lock ]; then
+            echo "name=yarn" >> $GITHUB_OUTPUT
+            echo "cache=yarn" >> $GITHUB_OUTPUT
+            echo "install=yarn --frozen-lockfile" >> $GITHUB_OUTPUT
+            echo "run=yarn" >> $GITHUB_OUTPUT
+          else
+            echo "name=npm" >> $GITHUB_OUTPUT
+            echo "cache=npm" >> $GITHUB_OUTPUT
+            echo "install=npm ci" >> $GITHUB_OUTPUT
+            echo "run=npm run" >> $GITHUB_OUTPUT
+          fi
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+          cache: ${{ steps.pm.outputs.cache }}
+
+      - name: Install deps
+        run: ${{ steps.pm.outputs.install }}
+
+      - name: Detect E2E framework
+        id: deps
+        run: |
+          node -e "
+          const fs = require('fs');
+          const p = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+          const deps = {...p.dependencies, ...p.devDependencies};
+          const out = {
+            hasPlaywright: !!deps['@playwright/test'],
+            hasCypress: !!deps['cypress']
+          };
+          for (const [k, v] of Object.entries(out)) {
+            process.stdout.write(k + '=' + v + '\n');
+          }
+          " >> $GITHUB_OUTPUT
+
+      - name: Install Playwright browsers
+        if: ${{ steps.deps.outputs.hasPlaywright == 'true' }}
+        run: npx playwright install --with-deps
+
+      - name: Build (Next/React) before E2E
+        run: |
+          ${{ steps.pm.outputs.run }} build --if-present || true
+
+      - name: Start app
+        run: |
+          PORT=3000 ${{ steps.pm.outputs.run }} start --if-present &>/dev/null & echo $! > .pid || true
+
+      - name: Run Playwright
+        if: ${{ steps.deps.outputs.hasPlaywright == 'true' }}
+        run: npx playwright test --reporter=github
+
+      - name: Run Cypress
+        if: ${{ steps.deps.outputs.hasCypress == 'true' }}
+        uses: cypress-io/github-action@v6
+        with:
+          build: false
+          start: ${{ steps.pm.outputs.run }} start --if-present
+          wait-on: "http://localhost:3000"
+
+      - name: Upload Playwright report
+        if: always() && steps.deps.outputs.hasPlaywright == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report
+          if-no-files-found: ignore
+
+      - name: Stop app
+        if: always()
+        run: |
+          if [ -f .pid ]; then kill $(cat .pid) || true; fi
