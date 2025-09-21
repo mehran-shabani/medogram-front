@@ -1,11 +1,10 @@
 name: Package • Attach Assets
 
-on:
+'on':
   push:
     tags:
       - "v*.*.*"
   workflow_dispatch:
-
 permissions:
   contents: write
 
