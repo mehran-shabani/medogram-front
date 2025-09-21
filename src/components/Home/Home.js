@@ -741,7 +741,7 @@ const Home = () => {
                                                         lineHeight: 1.7
                                                     }}
                                                 >
-                                                    "{testimonial.text}"
+                                                    &ldquo;{testimonial.text}&rdquo;
                                                 </Typography>
                                             </Box>
                                             <Box>
