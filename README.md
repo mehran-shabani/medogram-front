@@ -68,3 +68,14 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+## 🔁 Releases & Downloadable Packages
+
+- **Automated Versioning**: Conventional Commits → semver, tags, CHANGELOG, GitHub Releases (workflow: *Release Please*).
+- **Release Assets**: On tag push (e.g., `v1.2.3`), CI builds and attaches `.zip` artifacts:
+  - If present: `.next/`, `dist/`, `build/`
+  - Always: `*-source.zip` (source snapshot)
+
+Badges:
+[![Release Please](https://github.com/OWNER/REPO/actions/workflows/release-please.yml/badge.svg)](https://github.com/OWNER/REPO/actions/workflows/release-please.yml)
+[![Package • Attach Assets](https://github.com/OWNER/REPO/actions/workflows/package-on-tag.yml/badge.svg)](https://github.com/OWNER/REPO/actions/workflows/package-on-tag.yml)
