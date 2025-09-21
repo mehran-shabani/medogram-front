@@ -1,0 +1,17 @@
+{
+  "/_not-found/page": "app/_not-found/page.js",
+  "/about/page": "app/about/page.js",
+  "/blogs/page": "app/blogs/page.js",
+  "/contact/page": "app/contact/page.js",
+  "/baletranscription/page": "app/baletranscription/page.js",
+  "/diabetes-prediction/page": "app/diabetes-prediction/page.js",
+  "/excluded-services/page": "app/excluded-services/page.js",
+  "/login/page": "app/login/page.js",
+  "/page": "app/page.js",
+  "/payment-redirect/page": "app/payment-redirect/page.js",
+  "/payment-visit/page": "app/payment-visit/page.js",
+  "/profile/page": "app/profile/page.js",
+  "/robots.txt/route": "app/robots.txt/route.js",
+  "/user-visits/page": "app/user-visits/page.js",
+  "/visits/page": "app/visits/page.js"
+}

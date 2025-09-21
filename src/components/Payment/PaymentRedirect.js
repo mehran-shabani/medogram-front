@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { useLocation, Link } from 'react-router-dom';
+import NextLink from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import axios from 'axios';
 import {
     Box,
@@ -90,7 +91,7 @@ const ContentBox = styled(Box)({
 });
 
 const PaymentRedirect = () => {
-    const location = useLocation();
+    const searchParams = useSearchParams();
     const [transId, setTransId] = useState(null);
     const [idGet, setIdGet] = useState(null);
     const [status, setStatus] = useState('');
@@ -98,9 +99,8 @@ const PaymentRedirect = () => {
     const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'info' });
 
     useEffect(() => {
-        const params = new URLSearchParams(location.search);
-        const transIdFromURL = params.get('trans_id');
-        const idGetFromURL = params.get('id_get');
+        const transIdFromURL = searchParams.get('trans_id');
+        const idGetFromURL = searchParams.get('id_get');
 
         if (transIdFromURL && idGetFromURL) {
             setTransId(transIdFromURL);
@@ -109,7 +109,7 @@ const PaymentRedirect = () => {
             setStatus('اطلاعات پرداخت ناقص است');
             setIsLoading(false);
         }
-    }, [location]);
+    }, [searchParams]);
 
     const verifyPayment = useCallback(async () => {
         try {
@@ -207,8 +207,8 @@ const PaymentRedirect = () => {
                                 </Box>
                             </AnimatedBox>
                             <Button
-                                component={Link}
-                                to="/"
+                                component={NextLink}
+                                href="/"
                                 startIcon={<ArrowBack />}
                                 variant="outlined"
                                 color="primary"

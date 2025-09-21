@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import {
     Box,
     TextField,
@@ -37,7 +37,7 @@ const Auth = () => {
     });
 
     const { registerUser, verifyUser, token } = useContext(AuthContext);
-    const navigate = useNavigate();
+    const router = useRouter();
 
     // ارسال کد به شماره موبایل
     const handleSendCode = async () => {
@@ -88,7 +88,7 @@ const Auth = () => {
                 setState(prev => ({ ...prev, step: 'collectUsername' }));
             } else {
                 toast.success('ورود موفقیت‌آمیز');
-                navigate('/');
+                router.push('/');
             }
         } catch (error) {
             toast.error(error.message || 'کد واردشده صحیح نیست');
@@ -110,7 +110,7 @@ const Auth = () => {
             await updateUsername(token, state.username);
 
             toast.success('نام و نام خانوادگی با موفقیت ثبت شد.');
-            navigate('/');
+            router.push('/');
         } catch (error) {
             toast.error(error.message || 'ذخیره اطلاعات با خطا مواجه شد.');
         } finally {

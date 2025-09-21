@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
-import { Helmet } from 'react-helmet';
+// Helmet will be replaced by Next metadata; keep component as-is
 import Auth from './Auth';
 import logoImage from '../../images/medogram-logo.png';
 
@@ -49,10 +49,6 @@ const Logo = styled.img`
 const Login = () => {
     return (
         <>
-            <Helmet>
-                <title>Login to Medogram</title>
-                <link rel="icon" type="image/png" href={logoImage} />
-            </Helmet>
             <LoginContainer>
                 <LoginCard
                     initial={{ opacity: 0, y: -50 }}

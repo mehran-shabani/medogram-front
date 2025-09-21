@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import NextLink from 'next/link';
+import { useRouter } from 'next/navigation';
 import styled, { ThemeProvider } from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AuthContext } from '../Auth/AuthContext';
@@ -252,7 +253,7 @@ const Navbar = () => {
     const { isVerified, logout } = useContext(AuthContext);
 
     // برای هدایت به صفحه لاگین
-    const navigate = useNavigate();
+    const router = useRouter();
 
     // بستن منوی کشویی
     const closeMenu = () => {
@@ -314,7 +315,7 @@ const Navbar = () => {
     // عمل خروج
     const handleLogout = () => {
         logout();       // توکن و وضعیت isVerified را ریست می‌کند
-        navigate('/login'); // کاربر را به صفحه ورود می‌برد
+        router.push('/login'); // کاربر را به صفحه ورود می‌برد
     };
 
     return (
@@ -351,7 +352,7 @@ const Navbar = () => {
                                     // سبز شود
                                     whileHover={{ scale: 1.05 }}
                                     whileTap={{ scale: 0.95 }}
-                                    onClick={() => navigate('/login')}
+                                    onClick={() => router.push('/login')}
                                 >
                                     <PersonOutline />
                                     <span>ورود</span>
@@ -421,9 +422,9 @@ const Navbar = () => {
                                         >
                                             {item.subItems.map((subItem, subIndex) => (
                                                 <SubNavItem key={subIndex} whileHover={{ x: 5 }}>
-                                                    <Link to={subItem.link} onClick={closeMenu}>
+                                                    <NextLink href={subItem.link} onClick={closeMenu}>
                                                         {subItem.title}
-                                                    </Link>
+                                                    </NextLink>
                                                 </SubNavItem>
                                             ))}
                                         </SubNav>
