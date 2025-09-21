@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import NextLink from 'next/link';
 import { Box, Typography, Button, keyframes } from '@mui/material';
 import { styled } from '@mui/system';
 
@@ -196,8 +196,8 @@ const NotFound = () => {
             </Typography>
 
             <StyledButton
-                component={Link}
-                to="/"
+                component={NextLink}
+                href="/"
                 variant="outlined"
                 sx={{
                     color: '#00fff9',

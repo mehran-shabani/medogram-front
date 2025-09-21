@@ -10,7 +10,7 @@ import {
     Grow,
 } from '@mui/material';
 import { createTheme, ThemeProvider, responsiveFontSizes } from '@mui/material/styles';
-import { Link } from 'react-router-dom';
+import NextLink from 'next/link';
 import {
     MedicalServices,
     LocalHospital,
@@ -308,8 +308,8 @@ const Home = () => {
                         {serviceCards.map((card) => (
                             <Grid item xs={12} sm={6} md={4} key={card.id}>
                                 <Card
-                                    component={Link}
-                                    to={card.link}
+                                    component={NextLink}
+                                    href={card.link}
                                     sx={{
                                         minHeight: '280px', // ارتفاع حداقل برای یکسان‌سازی
                                         height: '100%',

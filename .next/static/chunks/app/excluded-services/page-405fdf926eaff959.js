@@ -1,0 +1,21 @@
+(self.webpackChunk_N_E=self.webpackChunk_N_E||[]).push([[2129],{7080:function(e,t,i){Promise.resolve().then(i.bind(i,9575))},9575:function(e,t,i){"use strict";i.r(t),i.d(t,{default:function(){return _}});var n=i(7437);i(2265);var o=i(3410),r=i(5656),a=i(7644),s=i(1691),l=i(899),d=i(486),c=i(6387),x=i(8826),p=i(5273),h=i(3431),u=i(7051),b=i(4902),f=i(3146),g=i(9084),m=i(2416),Z=i(275),j=i(6298);let y=(0,f.F4)`
+    0% {
+        box-shadow: 0 0 0 0 rgba(255, 59, 48, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 15px rgba(255, 59, 48, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(255, 59, 48, 0);
+    }
+`,v=(0,f.F4)`
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+`,F=(0,g.Z)(o.Z)(e=>{let{theme:t}=e;return{padding:t.spacing(6),maxWidth:"900px",margin:"40px auto",backgroundColor:"#fff",borderRadius:3*t.shape.borderRadius,boxShadow:"0 10px 40px rgba(0, 0, 0, 0.1)",overflow:"hidden",position:"relative","&::before":{content:'""',position:"absolute",top:0,left:0,right:0,bottom:0,borderRadius:"inherit",animation:`${y} 2s infinite`,pointerEvents:"none"}}}),k=(0,g.Z)(r.Z)(e=>{let{theme:t}=e;return{position:"absolute",top:0,left:0,right:0,height:"200px",background:"linear-gradient(45deg, #FF3B30, #FF9500, #FF2D55)",backgroundSize:"200% 200%",animation:`${v} 15s ease infinite`,opacity:.1,zIndex:0}}),w=(0,g.Z)(r.Z)({position:"relative",zIndex:1}),S=(0,g.Z)(a.ZP)(e=>{let{theme:t}=e;return{marginBottom:t.spacing(3),backgroundColor:"#ffffff",borderRadius:2*t.shape.borderRadius,boxShadow:"0 4px 15px rgba(0, 0, 0, 0.05)",transition:"all 0.4s ease","&:hover":{transform:"translateY(-5px) scale(1.02)",boxShadow:"0 10px 20px rgba(0, 0, 0, 0.1)"}}}),z=(0,j.E)(S);var C=()=>{let e=(0,s.Z)(),t=(0,l.Z)(e.breakpoints.down("sm"));return(0,n.jsxs)(F,{elevation:5,children:[(0,n.jsx)(k,{}),(0,n.jsxs)(w,{children:[(0,n.jsx)(d.Z,{in:!0,timeout:1e3,children:(0,n.jsxs)(r.Z,{sx:{mb:4,display:"flex",alignItems:"center",justifyContent:"center"},children:[(0,n.jsx)(Z.Z,{sx:{fontSize:40,color:"#FF3B30",mr:2}}),(0,n.jsx)(c.Z,{variant:t?"h5":"h4",align:"center",sx:{color:"#FF3B30",fontWeight:"bold",letterSpacing:.5},children:"هشدار بحرانی: خدمات تحت پوشش نیست"})]})}),(0,n.jsx)(x.Z,{in:!0,timeout:1500,children:(0,n.jsx)(r.Z,{sx:{display:"flex",alignItems:"center",justifyContent:"center",mb:4},children:(0,n.jsx)(c.Z,{variant:"subtitle1",align:"center",sx:{color:"#333",maxWidth:"700px",fontWeight:"medium",lineHeight:1.6},children:"رویه‌های پزشکی حیاتی و خدمات اورژانسی زیر در محدوده پوشش مدوگرام قرار نمی‌گیرند. این وضعیت‌ها نیاز به مداخله پزشکی حرفه‌ای حضوری دارند. در صورت مواجهه با هر یک از این شرایط، بلافاصله به دنبال مراقبت‌های پزشکی حضوری باشید."})})}),(0,n.jsx)(p.Z,{children:["مدیریت اورژانس‌های تهدیدکننده زندگی مانند ایست قلبی، سکته مغزی و حوادث بزرگ.","انتقال و حمل فیزیکی بیماران به مراکز بهداشتی.","خدمات پزشکی در محل حادثه برای معاینه فوری و تثبیت وضعیت.","مداخلات جراحی اورژانسی که نیاز به تیم‌های جراحی حضوری و تجهیزات دارند.","تجویز فوری داروهای نجات‌بخش مانند اپی‌نفرین یا نالوکسان.","تثبیت شرایط بحرانی مانند کنترل فشار خون یا کمک به تنفس.","معاینات فیزیکی که نیاز به تماس مستقیم با بیمار دارند، مانند بررسی نبض یا لمس شکم."].map((t,i)=>(0,n.jsxs)(z,{initial:{opacity:0,x:-20},animate:{opacity:1,x:0},transition:{duration:.5,delay:.1*i},children:[(0,n.jsx)(h.Z,{children:(0,n.jsx)(m.Z,{sx:{color:"#FF3B30",fontSize:28}})}),(0,n.jsx)(u.Z,{primary:t,primaryTypographyProps:{variant:"body1",fontWeight:"medium",color:e.palette.text.primary,fontSize:"1.1rem"}})]},i))}),(0,n.jsx)(b.Z,{title:"اگر با هر یک از این شرایط مواجه شدید، فوراً با خدمات اورژانس تماس بگیرید.",arrow:!0,placement:"top",children:(0,n.jsx)(c.Z,{variant:"caption",align:"center",sx:{display:"block",mt:4,color:"#666",fontStyle:"italic"},children:"در مواقع اضطراری همیشه شماره اورژانس محلی خود را شماره‌گیری کنید."})})]})]})};function _(){return(0,n.jsx)(C,{})}}},function(e){e.O(0,[5040,6298,9078,344,4902,4475,2971,2117,1744],function(){return e(e.s=7080)}),_N_E=e.O()}]);

@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "src/*"
+      ]
+    }
+  },
+  "include": [
+    "app",
+    "src",
+    "components",
+    "pages",
+    "next-env.d.ts"
+  ]
+}
+
