@@ -1,0 +1,4 @@
+# Example owners — adjust to your org/team.
+*       @your-org/maintainers
+/docs/*  @your-org/docs
+/apps/*  @your-org/frontend-team

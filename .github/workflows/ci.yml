@@ -1,0 +1,144 @@
+name: CI
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}-${{ github.workflow }}
+  cancel-in-progress: true
+
+jobs:
+  build-test:
+    name: Node ${{ matrix.node }} • CI
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [ "20.x", "22.x" ]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Detect package manager
+        id: pm
+        run: |
+          if [ -f pnpm-lock.yaml ]; then
+            echo "name=pnpm" >> $GITHUB_OUTPUT
+            echo "cache=pnpm" >> $GITHUB_OUTPUT
+            echo "install=pnpm install --frozen-lockfile" >> $GITHUB_OUTPUT
+            echo "run=pnpm" >> $GITHUB_OUTPUT
+          elif [ -f yarn.lock ]; then
+            echo "name=yarn" >> $GITHUB_OUTPUT
+            echo "cache=yarn" >> $GITHUB_OUTPUT
+            echo "install=yarn --frozen-lockfile" >> $GITHUB_OUTPUT
+            echo "run=yarn" >> $GITHUB_OUTPUT
+          else
+            echo "name=npm" >> $GITHUB_OUTPUT
+            echo "cache=npm" >> $GITHUB_OUTPUT
+            echo "install=npm ci" >> $GITHUB_OUTPUT
+            echo "run=npm run" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Use Node ${{ matrix.node }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: ${{ steps.pm.outputs.cache }}
+
+      - name: Install dependencies
+        run: ${{ steps.pm.outputs.install }}
+
+      - name: Parse package.json
+        id: pkg
+        run: |
+          node -e "
+          const fs = require('fs');
+          const p = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+          const has = (k) => p.scripts && p.scripts[k];
+          const deps = {...p.dependencies, ...p.devDependencies};
+          const out = {
+            hasLint: !!(has('lint') || deps.eslint),
+            hasTypecheck: !!(has('typecheck') || fs.existsSync('tsconfig.json')),
+            hasTest: !!(has('test') || deps.vitest || deps.jest),
+            hasBuild: !!(has('build') || deps.next || deps['react-scripts']),
+            hasVitest: !!deps.vitest,
+            hasJest: !!deps.jest,
+            hasNext: !!deps.next
+          };
+          for (const [k, v] of Object.entries(out)) {
+            process.stdout.write(k + '=' + v + '\n');
+          }
+          " >> $GITHUB_OUTPUT
+
+      - name: Lint
+        if: ${{ steps.pkg.outputs.hasLint == 'true' }}
+        run: |
+          if [ '${{ steps.pkg.outputs.hasLint }}' = 'true' ]; then
+            if jq -e '.scripts.lint' package.json >/dev/null 2>&1; then
+              ${{ steps.pm.outputs.run }} lint
+            else
+              npx eslint . --ext .js,.jsx,.ts,.tsx
+            fi
+          fi
+
+      - name: Typecheck
+        if: ${{ steps.pkg.outputs.hasTypecheck == 'true' }}
+        run: |
+          if [ -f tsconfig.json ]; then
+            if jq -e '.scripts.typecheck' package.json >/dev/null 2>&1; then
+              ${{ steps.pm.outputs.run }} typecheck
+            else
+              npx -y typescript tsc --noEmit
+            fi
+          fi
+
+      - name: Test (with coverage)
+        if: ${{ steps.pkg.outputs.hasTest == 'true' }}
+        run: |
+          if [ '${{ steps.pkg.outputs.hasVitest }}' = 'true' ]; then
+            ${{ steps.pm.outputs.run }} test -- --coverage --run
+          elif [ '${{ steps.pkg.outputs.hasJest }}' = 'true' ]; then
+            ${{ steps.pm.outputs.run }} test -- --coverage
+          else
+            ${{ steps.pm.outputs.run }} test --if-present
+          fi
+
+      - name: Upload coverage artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-${{ matrix.node }}
+          path: |
+            coverage/**
+            .nyc_output/**
+            coverage-final.json
+          if-no-files-found: ignore
+          retention-days: 7
+
+      - name: Build
+        if: ${{ steps.pkg.outputs.hasBuild == 'true' }}
+        run: |
+          if [ '${{ steps.pkg.outputs.hasNext }}' = 'true' ]; then
+            ${{ steps.pm.outputs.run }} build
+          elif [ -f package.json ]; then
+            ${{ steps.pm.outputs.run }} build --if-present
+          fi
+
+      - name: Upload build artifact
+        if: success() && steps.pkg.outputs.hasBuild == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-${{ matrix.node }}
+          path: |
+            .next/**
+            build/**
+            dist/**
+          if-no-files-found: ignore
+          retention-days: 7
