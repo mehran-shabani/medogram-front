@@ -13,7 +13,7 @@
     "@mui/system": "^7.3.2",
     "@testing-library/jest-dom": "^6.8.0",
     "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^13.5.0",
+    "@testing-library/user-event": "^14.6.1",
     "axios": "^1.12.2",
     "framer-motion": "^11.3.30",
     "lucide-react": "^0.471.1",
