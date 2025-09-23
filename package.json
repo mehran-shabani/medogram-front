@@ -26,7 +26,7 @@
     "react-router-dom": "^7.9.1",
     "react-toastify": "^10.0.5",
     "sharp": "^0.34.4",
-    "styled-components": "^6.1.12",
+    "styled-components": "^6.1.19",
     "tesseract.js": "^5.1.1",
     "web-vitals": "^2.1.4",
     "yup": "^1.4.0"
