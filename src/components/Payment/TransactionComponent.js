@@ -1,6 +1,5 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
-import { AuthContext } from '../Auth/AuthContext';
 import {
     Button,
     Typography,
@@ -156,7 +155,6 @@ const SecurityBadge = styled(Box)(({ theme }) => ({
 }));
 
 const TransactionComponent = () => {
-    const { token, isVerified } = useContext(AuthContext);
     const [loading, setLoading] = useState(false);
     const [paymentUrl, setPaymentUrl] = useState(null);
     const [amount, setAmount] = useState(300000);
@@ -190,12 +188,9 @@ const TransactionComponent = () => {
 
         setLoading(true);
         try {
-            const config = {
-                headers: { Authorization: `Bearer ${token}` }
-            };
             const response = await axios.post('https://api.medogram.ir/api/transaction/', {
                 amount: amount
-            }, config);
+            });
             if (response.data && response.data.payment_url) {
                 setPaymentUrl(response.data.payment_url);
                 toast.success('لینک پرداخت با موفقیت ایجاد شد!', {
@@ -206,7 +201,7 @@ const TransactionComponent = () => {
                 throw new Error('پاسخی از سمت سرور دریافت نشد.');
             }
         } catch (err) {
-            const errorMessage = err.response?.data?.error || err.message || 'خطایی در دریافت لینک پرداخت رخ داده است. مجددا با تلفن همراه احراز هویت کنید.';
+            const errorMessage = err.response?.data?.error || err.message || 'خطایی در دریافت لینک پرداخت رخ داده است.';
             toast.error(errorMessage);
         } finally {
             setLoading(false);
@@ -285,78 +280,65 @@ const TransactionComponent = () => {
 
                         <Divider style={{ margin: theme.spacing(3, 0) }} />
 
-                        {isVerified ? (
-                            <Grow in={true} timeout={600}>
-                                <Box display="flex" flexDirection="column" alignItems="center">
-                                    {loading ? (
-                                        <CircularProgress size={50} thickness={4} />
+                        <Grow in={true} timeout={600}>
+                            <Box display="flex" flexDirection="column" alignItems="center">
+                                {loading ? (
+                                    <CircularProgress size={50} thickness={4} />
+                                ) : (
+                                    !paymentUrl ? (
+                                        <StyledButton
+                                            variant="contained"
+                                            color="primary"
+                                            onClick={getPaymentLink}
+                                            fullWidth
+                                            disabled={Boolean(amountError)}
+                                            startIcon={<CreditCardIcon />}
+                                        >
+                                            دریافت لینک پرداخت
+                                        </StyledButton>
                                     ) : (
-                                        !paymentUrl ? (
+                                        <Box>
                                             <StyledButton
                                                 variant="contained"
-                                                color="primary"
-                                                onClick={getPaymentLink}
+                                                color="secondary"
+                                                href={paymentUrl}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
                                                 fullWidth
-                                                disabled={Boolean(amountError)}
                                                 startIcon={<CreditCardIcon />}
                                             >
-                                                دریافت لینک پرداخت
+                                                ورود به درگاه پرداخت
                                             </StyledButton>
-                                        ) : (
-                                            <Box>
-                                                <StyledButton
-                                                    variant="contained"
+                                            <Box mt={2} display="flex" justifyContent="space-between">
+                                                <Button
+                                                    variant="outlined"
                                                     color="secondary"
-                                                    href={paymentUrl}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    fullWidth
-                                                    startIcon={<CreditCardIcon />}
+                                                    startIcon={<DeleteIcon />}
+                                                    onClick={() => setPaymentUrl(null)}
                                                 >
-                                                    ورود به درگاه پرداخت
-                                                </StyledButton>
-                                                <Box mt={2} display="flex" justifyContent="space-between">
-                                                    <Button
-                                                        variant="outlined"
-                                                        color="secondary"
-                                                        startIcon={<DeleteIcon />}
-                                                        onClick={() => setPaymentUrl(null)}
-                                                    >
-
                                                     حذف لینک پرداخت
-                                                    </Button>
-                                                    <Button
-                                                        variant="outlined"
-                                                        color="primary"
-                                                        startIcon={<RotateLeftIcon />}
-                                                        onClick={handleResetPayment}
-                                                    >
-                                                        تغییر مبلغ
-                                                    </Button>
-                                                </Box>
+                                                </Button>
+                                                <Button
+                                                    variant="outlined"
+                                                    color="primary"
+                                                    startIcon={<RotateLeftIcon />}
+                                                    onClick={handleResetPayment}
+                                                >
+                                                    تغییر مبلغ
+                                                </Button>
                                             </Box>
-                                        )
-                                    )}
+                                        </Box>
+                                    )
+                                )}
 
-                                    <SecurityBadge>
-                                        <SecurityIcon color="success" />
-                                        <Typography variant="body2" style={{ fontFamily: 'Roboto, sans-serif' }}>
-                                            (SSL) تراکنش شما با پروتکل  محافظت می‌شود
-                                        </Typography>
-                                    </SecurityBadge>
-                                </Box>
-                            </Grow>
-                        ) : (
-                            <Box textAlign="center" mt={3}>
-                                <LockIcon color="error" style={{ fontSize: 60, marginBottom: theme.spacing(3) }} />
-                                <Typography color="error" variant="h6" gutterBottom style={{ fontFamily: 'Roboto, sans-serif' }}>
-                                    تایید حساب الزامی است
-                                </Typography>
-                                <Typography color="textSecondary" style={{ fontFamily: 'Roboto, sans-serif' }}>
-                                    لطفا برای ادامه، حساب کاربری خود را تایید کنید (ورود از طریق شماره تلفن همراه)
-                                </Typography>
+                                <SecurityBadge>
+                                    <SecurityIcon color="success" />
+                                    <Typography variant="body2" style={{ fontFamily: 'Roboto, sans-serif' }}>
+                                        (SSL) تراکنش شما با پروتکل  محافظت می‌شود
+                                    </Typography>
+                                </SecurityBadge>
                             </Box>
-                        )}
+                        </Grow>
                     </ContentBox>
                 </StyledPaper>
             </Fade>

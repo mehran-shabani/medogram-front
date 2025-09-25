@@ -1,10 +1,7 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import NextLink from 'next/link';
-import { useRouter } from 'next/navigation';
 import styled, { ThemeProvider } from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
-import { AuthContext } from '../Auth/AuthContext';
-import { PersonOutline } from '@mui/icons-material';
 
 // ------------ تم‌های روشن/تاریک ------------
 const lightTheme = {
@@ -64,35 +61,6 @@ const Brand = styled(motion.h1)`
   }
 `;
 
-// ------------ چراغ وضعیت ورود ------------
-const LoginIndicator = styled.div`
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background-color: ${(props) => (props.isLoggedIn ? '#2ecc71' : '#e74c3c')};
-  margin-left: 10px;
-`;
-
-// ------------ دکمه ورود/خروج با رنگ متفاوت ------------
-const LoginLink = styled(motion.button)`
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  color: #fff;                 /* رنگ متن سفید */
-  font-size: 1rem;
-  font-weight: 600;
-  padding: 0.4rem 0.8rem;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
-  /* اگر isLogout داشته باشد => قرمز، در غیر این صورت => سبز */
-  background: ${({ isLogout }) => (isLogout ? '#e74c3c' : '#2ecc71')};
-  transition: background 0.2s ease, transform 0.2s ease;
-
-  &:hover {
-    background: ${({ isLogout }) => (isLogout ? '#c0392b' : '#27ae60')};
-  }
-`;
 
 const MenuIcon = styled(motion.button)`
   display: flex;
@@ -211,14 +179,11 @@ const navItems = [
         title: 'ناحیه کاربری',
         subItems: [
             { title: 'صفحه‌ی اصلی', link: '/' },
-            { title: 'ورود به حساب', link: '/login' },
-            { title: 'پروفایل کاربری', link: '/profile' },
         ],
     },
     {
-        title: 'دستیار هوشمند',
+        title: 'تشخیص هوشمند',
         subItems: [
-            { title: 'دستیار گفتگویی (DocAI)', link: '/chat' },
             { title: 'تشخیص دیابت با هوش مصنوعی', link: '/diabetes-prediction' },
         ],
     },
@@ -248,12 +213,6 @@ const Navbar = () => {
     const [isVisible, setIsVisible] = useState(true);
     const [lastScrollY, setLastScrollY] = useState(0);
     const [isDarkMode, setIsDarkMode] = useState(false);
-
-    // از AuthContext، وضعیت ورود و تابع logout را می‌گیریم
-    const { isVerified, logout } = useContext(AuthContext);
-
-    // برای هدایت به صفحه لاگین
-    const router = useRouter();
 
     // بستن منوی کشویی
     const closeMenu = () => {
@@ -312,12 +271,6 @@ const Navbar = () => {
         setIsDarkMode(!isDarkMode);
     };
 
-    // عمل خروج
-    const handleLogout = () => {
-        logout();       // توکن و وضعیت isVerified را ریست می‌کند
-        router.push('/login'); // کاربر را به صفحه ورود می‌برد
-    };
-
     return (
         <ThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>
             <AnimatePresence>
@@ -329,35 +282,11 @@ const Navbar = () => {
                         transition={{ type: 'spring', stiffness: 120, damping: 20 }}
                     >
                         <NavLeft>
-                            {/* برند (MEDOGRAM) + چراغ وضعیت */}
+                            {/* برند (MEDOGRAM) */}
                             <Brand whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                                 <span>MED</span>
                                 <span style={{ color: 'lightblue', fontWeight: '300' }}>OGRAM</span>
-                                <LoginIndicator isLoggedIn={isVerified} />
                             </Brand>
-
-                            {/* دکمه ورود یا خروج بسته به isVerified */}
-                            {isVerified ? (
-                                <LoginLink
-                                    isLogout // قرمز شود
-                                    whileHover={{ scale: 1.05 }}
-                                    whileTap={{ scale: 0.95 }}
-                                    onClick={handleLogout}
-                                >
-                                    <PersonOutline />
-                                    <span>خروج</span>
-                                </LoginLink>
-                            ) : (
-                                <LoginLink
-                                    // سبز شود
-                                    whileHover={{ scale: 1.05 }}
-                                    whileTap={{ scale: 0.95 }}
-                                    onClick={() => router.push('/login')}
-                                >
-                                    <PersonOutline />
-                                    <span>ورود</span>
-                                </LoginLink>
-                            )}
                         </NavLeft>
 
                         {/* آیکون منوی همبرگری */}

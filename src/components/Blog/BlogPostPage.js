@@ -1,13 +1,11 @@
-import React, { useEffect, useState, useContext, useCallback } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
-import { AuthContext } from '../Auth/AuthContext';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import styled, { keyframes } from 'styled-components';
 import { FaThumbsUp, FaThumbsDown, FaComment, FaUserCircle, FaShare, FaBookmark } from 'react-icons/fa';
 
 const BlogListPage = () => {
-    const { isVerified, token } = useContext(AuthContext);
     const [blogs, setBlogs] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -59,11 +57,6 @@ const BlogListPage = () => {
     }, [handleScroll]);
 
     const handleCommentSubmit = async (blogId) => {
-        if (!isVerified) {
-            toast.error("برای ارسال نظر، نیاز به احراز هویت دارید.");
-            return;
-        }
-
         if (!commentText.trim()) {
             toast.warning("لطفاً نظر خود را وارد کنید.");
             return;
@@ -72,10 +65,7 @@ const BlogListPage = () => {
         try {
             const response = await axios.post(
                 `https://api.medogram.ir/api/blogs/${blogId}/comments/`,
-                { comment: commentText },
-                {
-                    headers: { Authorization: `Bearer ${token}` }
-                }
+                { comment: commentText }
             );
             toast.success("نظر شما با موفقیت ثبت شد!");
             setBlogs(prevBlogs =>
@@ -93,18 +83,9 @@ const BlogListPage = () => {
     };
 
     const handleLikeDislike = async (commentId, action) => {
-        if (!isVerified) {
-            toast.error("برای لایک یا دیسلایک کردن، نیاز به احراز هویت دارید.");
-            return;
-        }
-
         try {
             const response = await axios.post(
-                `https://api.medogram.ir/api/comments/${commentId}/${action}/`,
-                null,
-                {
-                    headers: { Authorization: `Bearer ${token}` }
-                }
+                `https://api.medogram.ir/api/comments/${commentId}/${action}/`
             );
 
             if (action === 'like') {
@@ -129,11 +110,6 @@ const BlogListPage = () => {
     };
 
     const handleSavePost = (blogId) => {
-        if (!isVerified) {
-            toast.error("برای ذخیره پست، نیاز به احراز هویت دارید.");
-            return;
-        }
-
         setSavedPosts(prev => {
             const newSaved = new Set(prev);
             if (newSaved.has(blogId)) {

@@ -152,14 +152,6 @@ const serviceCards = [
     },
     {
         id: 3,
-        title: 'چت با هوش مصنوعی',
-        icon: <Medication sx={{ fontSize: 40 }} />,
-        description: 'چت و مشاوره آنلاین با دستیار هوشمند',
-        link: '/chat',
-        color: '#ff4081',
-    },
-    {
-        id: 4,
         title: 'تمدید نسخه آنلاین',
         icon: <Medication sx={{ fontSize: 40 }} />,
         description: 'تمدید سریع و راحت نسخه آنلاین با کمترین قیمت دارو',
@@ -167,7 +159,7 @@ const serviceCards = [
         color: '#ff9800',
     },
     {
-        id: 5,
+        id: 4,
         title: 'مشاوره زیبایی',
         icon: <FaceRetouchingNatural sx={{ fontSize: 40 }} />,
         description: 'مشاوره تخصصی در حوزه زیبایی و تناسب اندام',
@@ -175,7 +167,7 @@ const serviceCards = [
         color: '#e91e63',
     },
     {
-        id: 6,
+        id: 5,
         title: 'استعلام قیمت دارو با بیمه',
         icon: <ImageSearch sx={{ fontSize: 40 }} />,
         description: 'استعلام قیمت دارو با بیمه و کاهش هزینه دارو',
@@ -183,7 +175,7 @@ const serviceCards = [
         color: '#9c27b0',
     },
     {
-        id: 7,
+        id: 6,
         title: 'تفسیر و بررسی جواب آزمایشات',
         icon: <ImageSearch sx={{ fontSize: 40 }} />,
         description: 'بررسی دقیق نتایج آزمایشات و تصاویر پزشکی شما',
@@ -472,28 +464,6 @@ const Home = () => {
                                         }}
                                     >
                                         شروع ویزیت
-                                    </Button>
-                                    <Button
-                                        component={NextLink}
-                                        href="/chat"
-                                        variant="outlined"
-                                        size={isMobile ? "medium" : "large"}
-                                        startIcon={<PlayArrow />}
-                                        sx={{
-                                            color: 'white',
-                                            borderColor: 'rgba(255, 255, 255, 0.5)',
-                                            px: { xs: 3, md: 4 },
-                                            py: { xs: 1.2, md: 1.5 },
-                                            borderRadius: '50px',
-                                            backdropFilter: 'blur(10px)',
-                                            fontSize: { xs: '0.9rem', md: '1rem' },
-                                            '&:hover': {
-                                                borderColor: 'white',
-                                                bgcolor: 'rgba(255, 255, 255, 0.1)',
-                                            },
-                                        }}
-                                    >
-                                        دستیار هوشمند
                                     </Button>
                                 </Box>
                             </motion.div>

@@ -1,6 +1,5 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { AuthContext } from '../Auth/AuthContext';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -86,24 +85,21 @@ const LoadingSpinner = styled.div`
 `;
 
 const UserVisitsPage = () => {
-    const { token } = useContext(AuthContext);
     const [visits, setVisits] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        if (token) {
-            setLoading(true);
-            axios.get('https://api.medogram.ir/api/visit', {
-                headers: { Authorization: `Bearer ${token}` }
-            }).then(response => {
+        setLoading(true);
+        axios.get('https://api.medogram.ir/api/visit')
+            .then(response => {
                 setVisits(response.data);
                 setLoading(false);
-            }).catch(error => {
+            })
+            .catch(error => {
                 console.error('Error fetching visits:', error);
                 setLoading(false);
             });
-        }
-    }, [token]);
+    }, []);
 
     return (
         <PageContainer>

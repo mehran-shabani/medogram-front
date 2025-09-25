@@ -1,15 +1,12 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { Typography, Button, Paper, Divider, Chip } from '@mui/material';
 import { Box } from '@mui/system';
 import TelegramIcon from '@mui/icons-material/Telegram';
 import PhoneIcon from '@mui/icons-material/Phone';
 import EmailIcon from '@mui/icons-material/Email';
-import LockIcon from '@mui/icons-material/Lock';
 import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
-import { AuthContext } from '../Auth/AuthContext';
 
 const Contact = () => {
-    const { isVerified } = useContext(AuthContext);
 
     return (
         <Box sx={{
@@ -46,18 +43,17 @@ const Contact = () => {
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: '2rem', width: '100%', mb: 4 }}>
                     <Button
                         variant="contained"
-                        startIcon={isVerified ? <PhoneIcon /> : <LockIcon />}
-                        href={isVerified ? "tel:09961733668" : "#"}
-                        disabled={!isVerified}
+                        startIcon={<PhoneIcon />}
+                        href="tel:09961733668"
                         sx={{
                             justifyContent: 'flex-start',
-                            backgroundColor: isVerified ? '#4CAF50' : '#bdbdbd',
-                            '&:hover': { backgroundColor: isVerified ? '#45a049' : '#bdbdbd' },
+                            backgroundColor: '#4CAF50',
+                            '&:hover': { backgroundColor: '#45a049' },
                             height: '50px',
                             fontSize: '1.1rem'
                         }}
                     >
-                        {isVerified ? '0996-173-3668' : 'شماره تلفن (نیاز به تایید حساب)'}
+                        0996-173-3668
                     </Button>
 
                     <Button
@@ -94,14 +90,6 @@ const Contact = () => {
                 </Box>
 
                 <Divider sx={{ mb: 3 }} />
-
-                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 2 }}>
-                    {isVerified ? (
-                        <Chip icon={<VerifiedUserIcon />} label="حساب کاربری تایید شده" color="success" />
-                    ) : (
-                        <Chip icon={<LockIcon />} label="حساب کاربری تایید نشده" color="warning" />
-                    )}
-                </Box>
 
                 <Typography variant="body1" sx={{ fontSize: '1rem', color: '#666', textAlign: 'center' }}>
                     برای ارتباط سریع، می‌توانید از طریق تلگرام با ما در تماس باشید. پشتیبانی ما 24/7 آماده پاسخگویی به شما است.

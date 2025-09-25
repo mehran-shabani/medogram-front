@@ -1,9 +1,7 @@
 // components/Visit.js
 
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-// اگر از AuthContext استفاده نمی‌کنید، با توجه به پروژه‌ی خود تغییر دهید
-import { AuthContext } from '../Auth/AuthContext';
 
 import {
     Box,
@@ -27,9 +25,6 @@ import StepFour from './StepFour';
 import { insuranceTypes } from '../data/symptomData';
 
 function Visit() {
-    // اگر از AuthContext استفاده نمی‌کنید، این خط را به‌تناسب پروژه تغییر یا حذف کنید:
-    const { token } = useContext(AuthContext);
-
     // چهـار استپ:
     //  0 -> اطلاعات بیمار
     //  1 -> علائم عمومی و عصبی
@@ -150,9 +145,7 @@ ${formData.description}`;
             };
 
             // ارسال درخواست
-            const response = await axios.post('https://api.medogram.ir/api/visit/', payload, {
-                headers: { Authorization: `Bearer ${token}` },
-            });
+            const response = await axios.post('https://api.medogram.ir/api/visit/', payload);
 
             // بعد از موفقیت، فرم را ریست کنیم و به استپ صفر برگردیم
             setFormData({
@@ -172,11 +165,7 @@ ${formData.description}`;
             toast.success(`ویزیت برای ${response.data.name} با موفقیت ثبت شد.`);
         } catch (error) {
             console.error('Error creating visit:', error);
-            if (error.response && error.response.status === 401) {
-                toast.error('احراز هویت ناموفق بود! لطفا دوباره وارد شوید.');
-            } else {
-                toast.error('خطا در ثبت ویزیت.');
-            }
+            toast.error('خطا در ثبت ویزیت.');
         } finally {
             setLoading(false);
         }
