@@ -34,6 +34,12 @@ export const metadata = {
   },
 };
 
+/**
+ * ریشه‌ی لای‌اوت برنامه را با جهت راست‌به‌چپ و بارگذاری اسکریپت‌های آنالیتیکس، ویجت گفت‌وگو و داده‌های ساختاری‌شده فراهم می‌کند.
+ *
+ * @param {{children: React.ReactNode}} props.children - محتوای فرزند که درون ClientLayout رندر می‌شود.
+ * @returns {JSX.Element} عنصر ریشه شامل تگ `<html lang="fa" dir="rtl">`، `<body>`، سه اسکریپت (Yektanet، Raychat، Structured Data) و ClientLayout که فرزندان را نگه می‌دارد.
+ */
 export default function RootLayout({ children }) {
   return (
     <html lang="fa" dir="rtl">
