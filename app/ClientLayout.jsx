@@ -2,22 +2,20 @@
 
 import { ThemeProvider } from '@mui/material/styles';
 import theme from '../src/styles/theme';
-import { AuthProvider } from '../src/components/Auth/AuthContext';
-import { ChatProvider } from '../src/components/chat/ChatContext';
-import Navbar from '../src/components/Navbar/Navbar';
 import Footer from '../src/components/Home/Footer';
 
+/**
+ * یک لایه‌بندی کلاینت که تم MUI را اعمال کرده و محتوای فرزند و فوتر را نمایش می‌دهد.
+ *
+ * @param {React.ReactNode} children - محتوایی که درون المان `main` قرار می‌گیرد.
+ * @returns {JSX.Element} یک عنصر JSX شامل `ThemeProvider` که یک المان `main` با `children` و یک `Footer` را در بر می‌گیرد.
+ */
 export default function ClientLayout({ children }) {
   return (
-    <AuthProvider>
-      <ChatProvider>
-        <ThemeProvider theme={theme}>
-          <Navbar />
-          <main style={{ marginTop: '64px' }}>{children}</main>
-          <Footer />
-        </ThemeProvider>
-      </ChatProvider>
-    </AuthProvider>
+    <ThemeProvider theme={theme}>
+      <main>{children}</main>
+      <Footer />
+    </ThemeProvider>
   );
 }
 
