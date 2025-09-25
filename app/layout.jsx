@@ -3,22 +3,22 @@ import ClientLayout from './ClientLayout';
 import Script from 'next/script';
 
 export const metadata = {
-  title: 'مدوگرام | تمدید نسخه آنلاین، قیمت دارو با بیمه، استعلام قیمت دارو | کاهش هزینه دارو',
+  title: 'مدوگرام | مقالات پزشکی و سلامت',
   description:
-    'مدوگرام | تمدید نسخه آنلاین، استعلام قیمت دارو با بیمه، کاهش هزینه دارو. کمترین قیمت داروها را هر روزه پیدا می‌کنیم و نسخه‌ها را بر اساس آن می‌نویسیم. ویزیت با دکتر هوشمند AI.',
-  keywords: 'تمدید نسخه آنلاین، قیمت دارو با بیمه، استعلام قیمت دارو، کاهش هزینه دارو، کمترین قیمت دارو، نسخه آنلاین، داروخانه آنلاین، بیمه درمانی',
+    'مدوگرام | مقالات تخصصی پزشکی و سلامت. اطلاعات مفید و به‌روز در زمینه پزشکی، سلامت و درمان.',
+  keywords: 'مقالات پزشکی، سلامت، درمان، پزشکی، مدوگرام',
   openGraph: {
     type: 'website',
     url: 'https://www.medogram.ir',
-    title: 'مدوگرام | تمدید نسخه آنلاین، قیمت دارو با بیمه، استعلام قیمت دارو',
+    title: 'مدوگرام | مقالات پزشکی و سلامت',
     description:
-      'تمدید نسخه آنلاین، استعلام قیمت دارو با بیمه، کاهش هزینه دارو. کمترین قیمت داروها را هر روزه پیدا می‌کنیم و نسخه‌ها را بر اساس آن می‌نویسیم.',
+      'مقالات تخصصی پزشکی و سلامت. اطلاعات مفید و به‌روز در زمینه پزشکی، سلامت و درمان.',
     images: [{ url: 'https://www.medogram.ir/logo.png' }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'مدوگرام | تمدید نسخه آنلاین، قیمت دارو با بیمه',
-    description: 'تمدید نسخه آنلاین، استعلام قیمت دارو با بیمه، کاهش هزینه دارو',
+    title: 'مدوگرام | مقالات پزشکی و سلامت',
+    description: 'مقالات تخصصی پزشکی و سلامت',
     images: ['https://www.medogram.ir/logo.png'],
   },
   robots: {
@@ -57,7 +57,7 @@ export default function RootLayout({ children }) {
               "@context": "https://schema.org",
               "@type": "MedicalOrganization",
               "name": "مدوگرام",
-              "description": "تمدید نسخه آنلاین، استعلام قیمت دارو با بیمه، کاهش هزینه دارو",
+              "description": "مقالات تخصصی پزشکی و سلامت",
               "url": "https://www.medogram.ir",
               "logo": "https://www.medogram.ir/logo.png",
               "sameAs": [
@@ -74,36 +74,19 @@ export default function RootLayout({ children }) {
               },
               "medicalSpecialty": [
                 "General Practice",
-                "Online Consultation",
-                "Prescription Renewal",
-                "Drug Price Inquiry"
+                "Health Education",
+                "Medical Information"
               ],
               "hasOfferCatalog": {
                 "@type": "OfferCatalog",
-                "name": "خدمات پزشکی آنلاین",
+                "name": "مقالات پزشکی",
                 "itemListElement": [
                   {
                     "@type": "Offer",
                     "itemOffered": {
                       "@type": "Service",
-                      "name": "تمدید نسخه آنلاین",
-                      "description": "تمدید سریع و راحت نسخه آنلاین با کمترین قیمت دارو"
-                    }
-                  },
-                  {
-                    "@type": "Offer",
-                    "itemOffered": {
-                      "@type": "Service",
-                      "name": "استعلام قیمت دارو با بیمه",
-                      "description": "استعلام قیمت دارو با بیمه و کاهش هزینه دارو"
-                    }
-                  },
-                  {
-                    "@type": "Offer",
-                    "itemOffered": {
-                      "@type": "Service",
-                      "name": "مشاوره آنلاین",
-                      "description": "دریافت مشاوره پزشکی تخصصی با پزشکان مجرب"
+                      "name": "مقالات پزشکی",
+                      "description": "مقالات تخصصی پزشکی و سلامت"
                     }
                   }
                 ]
