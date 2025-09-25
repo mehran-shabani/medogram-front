@@ -28,7 +28,7 @@
     "sharp": "^0.34.4",
     "styled-components": "^6.1.19",
     "tesseract.js": "^6.0.1",
-    "web-vitals": "^2.1.4",
+    "web-vitals": "^5.1.0",
     "yup": "^1.7.1"
   },
   "scripts": {
