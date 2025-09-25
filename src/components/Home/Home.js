@@ -4,16 +4,15 @@ import {
     Container,
     Typography,
     Box,
-    Card,
-    CardContent,
     useTheme,
     useMediaQuery,
     CircularProgress,
-    Alert
+    Alert,
+    Card,
+    CardContent,
+    CardMedia
 } from '@mui/material';
 import { createTheme, ThemeProvider, responsiveFontSizes } from '@mui/material/styles';
-import { styled } from '@mui/system';
-import { motion } from "framer-motion";
 
 // Theme Configuration
 let theme = createTheme({
@@ -41,82 +40,6 @@ let theme = createTheme({
 });
 
 theme = responsiveFontSizes(theme);
-
-// Styled Components
-const PageContainer = styled(Container)(({ theme }) => ({
-    paddingTop: theme.spacing(8),
-    paddingBottom: theme.spacing(8),
-    direction: 'rtl',
-}));
-
-const PageTitle = styled(Typography)(({ theme }) => ({
-    textAlign: 'center',
-    marginBottom: theme.spacing(6),
-    color: theme.palette.primary.main,
-    fontWeight: 'bold',
-}));
-
-const BlogCard = styled(motion.div)(({ theme }) => ({
-    background: 'white',
-    borderRadius: '20px',
-    boxShadow: '0 10px 30px rgba(0, 0, 0, 0.1)',
-    marginBottom: theme.spacing(4),
-    overflow: 'hidden',
-    border: '1px solid #e0e0e0',
-    transition: 'all 0.3s ease',
-    '&:hover': {
-        transform: 'translateY(-5px)',
-        boxShadow: '0 20px 40px rgba(0, 0, 0, 0.15)',
-    },
-}));
-
-const BlogImage = styled.img(({ theme }) => ({
-    width: '100%',
-    height: '300px',
-    objectFit: 'cover',
-    [theme.breakpoints.down('sm')]: {
-        height: '200px',
-    },
-}));
-
-const BlogContent = styled(Box)(({ theme }) => ({
-    padding: theme.spacing(3),
-}));
-
-const BlogTitle = styled(Typography)(({ theme }) => ({
-    fontWeight: 'bold',
-    marginBottom: theme.spacing(2),
-    color: theme.palette.text.primary,
-    lineHeight: 1.4,
-}));
-
-const BlogDescription = styled(Typography)(({ theme }) => ({
-    color: theme.palette.text.secondary,
-    lineHeight: 1.8,
-    textAlign: 'justify',
-    marginBottom: theme.spacing(2),
-}));
-
-const BlogMeta = styled(Box)(({ theme }) => ({
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingTop: theme.spacing(2),
-    borderTop: '1px solid #e0e0e0',
-    color: theme.palette.text.secondary,
-    fontSize: '0.9rem',
-}));
-
-const LoadingContainer = styled(Box)(({ theme }) => ({
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    minHeight: '400px',
-}));
-
-const ErrorContainer = styled(Box)(({ theme }) => ({
-    margin: theme.spacing(4, 0),
-}));
 
 const Home = () => {
     const [blogs, setBlogs] = useState([]);
@@ -156,11 +79,17 @@ const Home = () => {
     if (loading) {
         return (
             <ThemeProvider theme={theme}>
-                <PageContainer maxWidth="lg">
-                    <LoadingContainer>
-                        <CircularProgress size={60} />
-                    </LoadingContainer>
-                </PageContainer>
+                <Container maxWidth="lg" sx={{ 
+                    paddingTop: 8, 
+                    paddingBottom: 8, 
+                    direction: 'rtl',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    minHeight: '400px'
+                }}>
+                    <CircularProgress size={60} />
+                </Container>
             </ThemeProvider>
         );
     }
@@ -168,68 +97,125 @@ const Home = () => {
     if (error) {
         return (
             <ThemeProvider theme={theme}>
-                <PageContainer maxWidth="lg">
-                    <ErrorContainer>
-                        <Alert severity="error">{error}</Alert>
-                    </ErrorContainer>
-                </PageContainer>
+                <Container maxWidth="lg" sx={{ 
+                    paddingTop: 8, 
+                    paddingBottom: 8, 
+                    direction: 'rtl' 
+                }}>
+                    <Alert severity="error">{error}</Alert>
+                </Container>
             </ThemeProvider>
         );
     }
 
     return (
         <ThemeProvider theme={theme}>
-            <PageContainer maxWidth="lg">
-                <PageTitle variant="h3" component="h1">
+            <Container maxWidth="lg" sx={{ 
+                paddingTop: 8, 
+                paddingBottom: 8, 
+                direction: 'rtl' 
+            }}>
+                <Typography 
+                    variant="h3" 
+                    component="h1" 
+                    sx={{ 
+                        textAlign: 'center', 
+                        marginBottom: 6, 
+                        color: 'primary.main', 
+                        fontWeight: 'bold' 
+                    }}
+                >
                     مقالات مدوگرام
-                </PageTitle>
+                </Typography>
                 
                 {blogs.length > 0 ? (
                     <Box>
                         {blogs.map((blog, index) => (
-                            <BlogCard
+                            <Card
                                 key={blog.id}
-                                initial={{ opacity: 0, y: 50 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.6, delay: index * 0.2 }}
+                                sx={{
+                                    background: 'white',
+                                    borderRadius: '20px',
+                                    boxShadow: '0 10px 30px rgba(0, 0, 0, 0.1)',
+                                    marginBottom: 4,
+                                    overflow: 'hidden',
+                                    border: '1px solid #e0e0e0',
+                                    transition: 'all 0.3s ease',
+                                    '&:hover': {
+                                        transform: 'translateY(-5px)',
+                                        boxShadow: '0 20px 40px rgba(0, 0, 0, 0.15)',
+                                    },
+                                }}
                             >
                                 {blog.image1 && (
-                                    <BlogImage
-                                        src={blog.image1}
+                                    <CardMedia
+                                        component="img"
+                                        height="300"
+                                        image={blog.image1}
                                         alt={blog.title}
-                                        loading="lazy"
+                                        sx={{
+                                            objectFit: 'cover',
+                                            [theme.breakpoints.down('sm')]: {
+                                                height: '200px',
+                                            },
+                                        }}
                                     />
                                 )}
                                 
-                                <BlogContent>
-                                    <BlogTitle variant="h4" component="h2">
+                                <CardContent sx={{ padding: 3 }}>
+                                    <Typography 
+                                        variant="h4" 
+                                        component="h2" 
+                                        sx={{ 
+                                            fontWeight: 'bold', 
+                                            marginBottom: 2, 
+                                            color: 'text.primary', 
+                                            lineHeight: 1.4 
+                                        }}
+                                    >
                                         {blog.title}
-                                    </BlogTitle>
+                                    </Typography>
                                     
-                                    <BlogDescription variant="body1">
+                                    <Typography 
+                                        variant="body1" 
+                                        sx={{ 
+                                            color: 'text.secondary', 
+                                            lineHeight: 1.8, 
+                                            textAlign: 'justify', 
+                                            marginBottom: 2 
+                                        }}
+                                    >
                                         {blog.content}
-                                    </BlogDescription>
+                                    </Typography>
                                     
-                                    <BlogMeta>
+                                    <Box sx={{ 
+                                        display: 'flex', 
+                                        justifyContent: 'space-between', 
+                                        alignItems: 'center', 
+                                        paddingTop: 2, 
+                                        borderTop: '1px solid #e0e0e0', 
+                                        color: 'text.secondary', 
+                                        fontSize: '0.9rem' 
+                                    }}>
                                         <Typography variant="body2">
                                             نویسنده: {blog.author || 'مدوگرام'}
                                         </Typography>
                                         <Typography variant="body2">
                                             تاریخ: {formatDate(blog.created_at)}
                                         </Typography>
-                                    </BlogMeta>
-                                </BlogContent>
-                            </BlogCard>
+                                    </Box>
+                                </CardContent>
+                            </Card>
                         ))}
                     </Box>
                 ) : (
-                    <Box textAlign="center" py={8}>
+                    <Box sx={{ textAlign: 'center', py: 8 }}>
                         <Typography variant="h6" color="textSecondary">
                             مقاله‌ای برای نمایش وجود ندارد
                         </Typography>
                     </Box>
                 )}
-            </PageContainer>
+            </Container>
         </ThemeProvider>
     );
 };
